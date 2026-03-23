@@ -31,6 +31,8 @@ namespace LordBreakerX.Stats
         public StatProfilePanel CurrentProfilePanel { get; private set; }
         public StatsPanel CurrentStatsPanel { get; private set; }
 
+        public PropertiesPanel CurrentPropertiesPanel { get; private set; }
+
         public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
             System.Type sceneViewType = typeof(SceneView);
@@ -66,9 +68,9 @@ namespace LordBreakerX.Stats
 
             CurrentProfilePanel = new StatProfilePanel(STAGE_PANEL_HEADER, this);
             CurrentStatsPanel = new StatsPanel(STATS_PANEL_HEADER, this);
-            VisualElement propertiesPanel = new StatsEditorPanel(PROPERTIES_PANEL_HEADER, this);
+            CurrentPropertiesPanel = new PropertiesPanel(PROPERTIES_PANEL_HEADER, this);
 
-            VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, propertiesPanel);
+            VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, CurrentPropertiesPanel);
 
             root.Add(_toolbar);
             root.Add(splitView);

@@ -1,34 +1,39 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
     public class StatItem : StatsListItem<Stat>
     {
-        private bool _isRenaming = true;
-
         public StatItem(StatsEditorPanel parentPanel, ListView parentView) : base(parentPanel, parentView)
         {
         }
 
         protected override void OnBindData()
         {
-            NameTextField.value = Data.GetId();
-            NameLabel.text = Data.GetId();
+            StatsPanel statsPanel = ParentPanel as StatsPanel;
 
-            if (_isRenaming)
+            if (statsPanel.CurrentProfile == null) return;
+
+            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+
+            if (Data.GetId() == "")
             {
-                NameLabel.style.display = DisplayStyle.None;
+                int index = stats.IndexOf(Data);
+                Data.SetId($"Stat Profile {index}");
+                NameTextField.value = Data.GetId();
+                EditorUtility.SetDirty(statsPanel.CurrentProfile);
+                EditorUtility.SetDirty(ParentWindow.Asset);
                 NameTextField.style.display = DisplayStyle.Flex;
             }
             else
             {
                 NameLabel.style.display = DisplayStyle.Flex;
-                NameTextField.style.display = DisplayStyle.None;
             }
+
+            NameTextField.value = Data.GetId();
+            NameLabel.text = Data.GetId();
         }
 
         protected override void OnUnbindData()
@@ -103,8 +108,6 @@ namespace LordBreakerX.Stats
             EditorUtility.SetDirty(ParentWindow.Asset);
 
             ParentView.RefreshItems();
-
-            _isRenaming = false;
         }
     }
 }

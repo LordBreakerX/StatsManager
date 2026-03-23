@@ -23,7 +23,7 @@ namespace LordBreakerX.Stats
             style.justifyContent = Justify.Center;
 
             NameTextField = new TextField();
-            NameTextField.style.display = DisplayStyle.Flex;
+            NameTextField.style.display = DisplayStyle.None;
 
             NameLabel = new Label();
             NameLabel.style.paddingLeft = 5;

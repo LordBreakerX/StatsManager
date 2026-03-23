@@ -11,15 +11,7 @@ namespace LordBreakerX.Stats
             VisualElement spacerElement = new VisualElement();
             spacerElement.style.flexGrow = 1;
 
-            ToolbarButton saveAssetButton = new ToolbarButton();
-            saveAssetButton.text = "Save Asset";
-
-            ToolbarButton autoSaveButton = new ToolbarButton();
-            autoSaveButton.text = "Auto-Save";
-
             Add(spacerElement);
-            Add(saveAssetButton);
-            Add(autoSaveButton);
 
             style.borderBottomWidth = 2;
         }

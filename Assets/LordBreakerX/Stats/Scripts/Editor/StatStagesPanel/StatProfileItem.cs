@@ -7,27 +7,33 @@ namespace LordBreakerX.Stats
 {
     public sealed class StatProfileItem : StatsListItem<StatProfile>
     {
-        private bool _isRenaming = true;
-
         public StatProfileItem(StatsEditorPanel parentPanel, ListView parentView) : base(parentPanel, parentView)
         {
         }
 
         protected sealed override void OnBindData()
         {
-            NameTextField.value = Data.name;
-            NameLabel.text = Data.name;
+            List<StatProfile> profiles = ParentWindow.Asset.Profiles;
 
-            if (_isRenaming)
+            if (Data.ID == "")
             {
-                NameLabel.style.display = DisplayStyle.None;
+                int index =  profiles.IndexOf(Data);
+                Data.name = $"Stat Profile {index}";
+                EditorUtility.SetDirty(Data);
+                EditorUtility.SetDirty(ParentWindow.Asset);
+
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+
                 NameTextField.style.display = DisplayStyle.Flex;
             }
             else
             {
                 NameLabel.style.display = DisplayStyle.Flex;
-                NameTextField.style.display = DisplayStyle.None;
             }
+
+            NameTextField.value = Data.name;
+            NameLabel.text = Data.ID;
         }
 
         protected sealed override void OnUnbindData()
@@ -98,8 +104,6 @@ namespace LordBreakerX.Stats
             EditorUtility.SetDirty(ParentWindow.Asset);
 
             ParentView.RefreshItems();
-
-            _isRenaming = false;
         }
     }
 }

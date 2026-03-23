@@ -23,10 +23,8 @@ namespace LordBreakerX.Stats
 
         private void CreateStatProfile()
         {
-            int nextIndex = ParentWindow.Asset.Profiles.Count;
-
             StatProfile profile = ScriptableObject.CreateInstance<StatProfile>();
-            profile.name = $"Stat Profile {nextIndex}";
+            profile.name = "";
             
             string parentPath = AssetDatabase.GetAssetPath(ParentWindow.Asset);
 
@@ -37,7 +35,7 @@ namespace LordBreakerX.Stats
             }
 
             ParentWindow.Asset.Profiles.Add(profile);
-            _stagesListView.RefreshItems();
+            _stagesListView.Rebuild();
 
             AssetDatabase.Refresh();
             EditorUtility.SetDirty(ParentWindow.Asset);

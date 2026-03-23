@@ -50,10 +50,8 @@ namespace LordBreakerX.Stats
         {
             if (_currentProfile == null) return;
 
-            int nextIndex = _currentProfile.Stats.Count;
-
             Stat stat = new Stat();
-            stat.SetId($"Stat {nextIndex}");
+            stat.SetId("");
 
             _currentProfile.Stats.Add(stat);
             _statsListView.RefreshItems();
