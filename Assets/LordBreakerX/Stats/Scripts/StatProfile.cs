@@ -34,15 +34,5 @@ namespace LordBreakerX.Stats
 
             return null;
         }
-
-        public T GetStatValue<T>(string id) where T : class
-        {
-            if (_statRegsitry[id] is Stat<T> stat)
-            {
-                return stat.GetTypedValue();
-            }
-
-            throw new InvalidCastException($"Stat {id} is not of type {typeof(T)}");
-        }
     }
 }

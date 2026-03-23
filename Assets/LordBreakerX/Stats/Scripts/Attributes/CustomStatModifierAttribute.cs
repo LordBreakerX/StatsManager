@@ -5,11 +5,14 @@ namespace LordBreakerX.Stats
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class CustomStatModifierAttribute : Attribute
     {
-        public string LabelText { get; private set; }
+        public string DisplayName { get; private set; }
 
-        public CustomStatModifierAttribute(string labelText)
+        public StatType ModifierType { get; private set; }
+
+        public CustomStatModifierAttribute(string displayName, StatType modifierType)
         {
-            LabelText = labelText;
+            DisplayName = displayName;
+            ModifierType = modifierType;
         }
     }
 }

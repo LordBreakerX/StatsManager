@@ -52,8 +52,7 @@ namespace LordBreakerX.Stats
 
             int nextIndex = _currentProfile.Stats.Count;
 
-            Stat stat = new FloatStat();
-            stat.SetValue(0.0f);
+            Stat stat = new Stat();
             stat.SetId($"Stat {nextIndex}");
 
             _currentProfile.Stats.Add(stat);
