@@ -1,22 +1,23 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
-    public sealed class StatProfileItem : StatsListItem<StatProfile>
+    public class StatItem : StatsListItem<Stat>
     {
         private bool _isRenaming = true;
 
-        public StatProfileItem(StatsEditorPanel parentPanel, ListView parentView) : base(parentPanel, parentView)
+        public StatItem(StatsEditorPanel parentPanel, ListView parentView) : base(parentPanel, parentView)
         {
         }
 
-        protected sealed override void OnBindData()
+        protected override void OnBindData()
         {
-            NameTextField.value = Data.name;
-            NameLabel.text = Data.name;
+            NameTextField.value = Data.GetId();
+            NameLabel.text = Data.GetId();
 
             if (_isRenaming)
             {
@@ -30,44 +31,46 @@ namespace LordBreakerX.Stats
             }
         }
 
-        protected sealed override void OnUnbindData()
+        protected override void OnUnbindData()
         {
-            
+
         }
 
-        protected sealed override void DeleteItem(DropdownMenuAction action)
+        protected override void DeleteItem(DropdownMenuAction action)
         {
-            List<StatProfile> profiles = ParentWindow.Asset.Profiles;
+            StatsPanel statsPanel = ParentPanel as StatsPanel;
 
-            if (Data != null && profiles.Contains(Data))
+            if (statsPanel.CurrentProfile == null) return;
+
+            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+
+            if (Data != null && stats.Contains(Data))
             {
-                profiles.Remove(Data);
-
-                AssetDatabase.RemoveObjectFromAsset(Data);
-                Object.DestroyImmediate(Data, true);
-
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                stats.Remove(Data);
 
                 ParentView.RefreshItems();
                 EditorUtility.SetDirty(ParentWindow.Asset);
             }
         }
 
-        protected sealed override void DuplicateItem(DropdownMenuAction action)
+        protected override void DuplicateItem(DropdownMenuAction action)
         {
-            List<StatProfile> profiles = ParentWindow.Asset.Profiles;
+            StatsPanel statsPanel = ParentPanel as StatsPanel;
 
-            if (Data != null && profiles.Contains(Data))
+            if (statsPanel.CurrentProfile == null) return;
+
+            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+
+            if (Data != null && stats.Contains(Data))
             {
                 string itemName = NameLabel.text;
-                int nextIndex = profiles.IndexOf(Data) + 1;
-                profiles.Insert(nextIndex, Data);
+                int nextIndex = stats.IndexOf(Data) + 1;
+                stats.Insert(nextIndex, Data);
                 ParentView.RefreshItems();
             }
         }
 
-        protected sealed override void RenameItem(DropdownMenuAction action)
+        protected override void RenameItem(DropdownMenuAction action)
         {
             NameTextField.style.display = DisplayStyle.Flex;
             NameLabel.style.display = DisplayStyle.None;
@@ -86,14 +89,16 @@ namespace LordBreakerX.Stats
 
         private void OnBlur(BlurEvent evt)
         {
-            int stageIndex = ParentWindow.Asset.Profiles.IndexOf(Data);
-            ParentWindow.Asset.Profiles[stageIndex].name = NameTextField.value;
+            StatsPanel statsPanel = ParentPanel as StatsPanel;
+
+            if (statsPanel.CurrentProfile != null)
+            {
+                int statIndex = statsPanel.CurrentProfile.Stats.IndexOf(Data);
+                statsPanel.CurrentProfile.Stats[statIndex].SetId(NameTextField.value);
+            }
 
             NameTextField.style.display = DisplayStyle.None;
             NameLabel.style.display = DisplayStyle.Flex;
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
 
             EditorUtility.SetDirty(ParentWindow.Asset);
 

@@ -1,22 +1,19 @@
 using System;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace LordBreakerX.Stats
 {
+    [Serializable]
     public abstract class Stat<TValue> : Stat
     {
+        [SerializeField]
         private TValue _baseValue;
 
-        private List<IStatModifier<TValue>> _modifiers = new List<IStatModifier<TValue>>();
+        //private List<IStatModifier<TValue>> _modifiers = new List<IStatModifier<TValue>>();
 
-        public Stat(TValue baseValue)
-        {
-            _baseValue = baseValue;
-        }
+        protected sealed override Type ValueType => typeof(TValue);
 
-        public override Type ValueType => typeof(TValue);
-
-        public override object GetValue()
+        public sealed override object GetValue()
         {
             return GetTypedValue();
         }
@@ -25,26 +22,63 @@ namespace LordBreakerX.Stats
         {
             TValue value = _baseValue;
 
-            foreach (var modifier in _modifiers)
-            {
-                modifier.Apply(value);
-            }
+            //foreach (var modifier in _modifiers)
+            //{
+            //    modifier.Apply(value);
+            //}
 
             return value;
         }
 
-        public void AddModifier(IStatModifier<TValue> modifier)
+        public sealed override void SetValue(object value)
         {
-            _modifiers.Add(modifier);
+            if (value == null)
+            {
+                _baseValue = default;
+            }
+            else if (value is TValue typedValue)
+            {
+                _baseValue = typedValue;
+            }
+            else
+            {
+                Type valueType = _baseValue.GetType();
+                throw new InvalidCastException($"Provided value is not of type {valueType}");
+            }
         }
+
+        //public void AddModifier(IStatModifier<TValue> modifier)
+        //{
+        //    _modifiers.Add(modifier);
+        //}
     }
 
+    [Serializable]
     public abstract class Stat
     {
-        public string Id { get; set; }
+        [SerializeField]
+        private string _id;
+
+        protected abstract Type ValueType { get; }
 
         public abstract object GetValue();
 
-        public abstract System.Type ValueType { get; }
+        public abstract void SetValue(object value);
+
+        public bool SetId(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                _id = id;
+                return true;
+            }
+
+            return false;
+        }
+
+        public string GetId()
+        {
+            return _id;
+        }
     }
 }

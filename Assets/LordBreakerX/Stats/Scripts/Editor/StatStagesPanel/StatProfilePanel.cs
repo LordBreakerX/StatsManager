@@ -1,28 +1,27 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
-    public class StatsStagePanel : StatsEditorPanel
+    public class StatProfilePanel : StatsEditorPanel
     {
         private Button _createStageButton;
 
         private ListView _stagesListView;
 
-        public StatsStagePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
+        public StatProfilePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
         }
 
         protected override void OnExtendHeader(VisualElement header)
         {
-            _createStageButton = new Button(CreateStage);
+            _createStageButton = new Button(CreateStatProfile);
             _createStageButton.text = "+";
             header.Add(_createStageButton);
         }
 
-        private void CreateStage()
+        private void CreateStatProfile()
         {
             int nextIndex = ParentWindow.Asset.Profiles.Count;
 
@@ -55,16 +54,28 @@ namespace LordBreakerX.Stats
             _stagesListView.style.flexGrow = 1;
             _stagesListView.Rebuild();
 
+            _stagesListView.selectionChanged += OnProfileChanged;
+
             root.Add(_stagesListView);
 
             root.AddManipulator(new ContextualMenuManipulator(CreateContextMenu));
+        }
+
+        private void OnProfileChanged(System.Collections.Generic.IEnumerable<object> obj)
+        {
+            if (_stagesListView.selectedItem == null) return;
+
+            if (_stagesListView.selectedItem is StatProfile item)
+            {
+                ParentWindow.CurrentStatsPanel.ChangeProfile(item);
+            }
         }
 
         private void CreateContextMenu(ContextualMenuPopulateEvent evt)
         {
             evt.menu.AppendAction("Add Stat Stage", (action) =>
             {
-                CreateStage();
+                CreateStatProfile();
             });
         }
 
@@ -78,7 +89,7 @@ namespace LordBreakerX.Stats
 
         private VisualElement MakeStageItem()
         {
-            StatProfileItem stageItem = new StatProfileItem(ParentWindow, _stagesListView);
+            StatProfileItem stageItem = new StatProfileItem(this, _stagesListView);
             stageItem.RegisterEvents();
             return stageItem;
         }

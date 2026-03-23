@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,11 +8,13 @@ namespace LordBreakerX.Stats
 {
     public class StatsPanel : StatsEditorPanel
     {
-        private Button _createStageButton;
+        private Button _createStatButton;
 
         private StatProfile _currentProfile;
 
-        private ListView _stagesListView;
+        private ListView _statsListView;
+
+        public StatProfile CurrentProfile { get { return _currentProfile; } }
 
         public StatsPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
@@ -20,56 +24,82 @@ namespace LordBreakerX.Stats
         public void ChangeProfile(StatProfile profile)
         {
             _currentProfile = profile;
+            
+            if (_currentProfile != null)
+            {
+                _statsListView.itemsSource = _currentProfile.Stats;
+                _statsListView.RefreshItems();
+                _createStatButton.SetEnabled(true);
+            }
+            else
+            {
+                _statsListView.itemsSource = new List<StatProfile>();
+                _statsListView.RefreshItems();
+                _createStatButton.SetEnabled(false);
+            }
         } 
 
         protected override void OnExtendHeader(VisualElement header)
         {
-            _createStageButton = new Button(CreateStage);
-            _createStageButton.text = "+";
-            header.Add(_createStageButton);
+            _createStatButton = new Button(CreateStat);
+            _createStatButton.text = "+";
+            header.Add(_createStatButton);
         }
 
-        private void CreateStage()
+        private void CreateStat()
         {
-            if (_currentProfile != null)
-            {
-                //_currentProfile.Stats.Add();
-                _stagesListView.RefreshItems();
-            }
+            if (_currentProfile == null) return;
+
+            int nextIndex = _currentProfile.Stats.Count;
+
+            Stat stat = new FloatStat();
+            stat.SetValue(0.0f);
+            stat.SetId($"Stat {nextIndex}");
+
+            _currentProfile.Stats.Add(stat);
+            _statsListView.RefreshItems();
+
+            EditorUtility.SetDirty(ParentWindow.Asset);
+            EditorUtility.SetDirty(CurrentProfile);
         }
 
         protected override void OnCreatePanelGUI(VisualElement root)
         {
-            _stagesListView = new ListView(_currentProfile.Stats);
-            _stagesListView.makeItem = MakeStageItem;
-            _stagesListView.bindItem = BindStageItem;
-            _stagesListView.unbindItem = UnbindStageItem;
-            _stagesListView.RefreshItems();
+            _statsListView = new ListView(new List<Stat>());
+            _statsListView.makeItem = MakeStatItem;
+            _statsListView.destroyItem = DestroyStatItem;
+            _statsListView.bindItem = BindStageItem;
+            _statsListView.RefreshItems();
 
-            root.Add(_stagesListView);
+            _createStatButton.SetEnabled(false);
+
+            root.Add(_statsListView);
         }
 
-        private VisualElement MakeStageItem()
+        private VisualElement MakeStatItem()
         {
-            return new TextField();
+            StatItem statItem = new StatItem(this, _statsListView);
+            statItem.RegisterEvents();
+            return statItem;
         }
 
-        private void BindStageItem(VisualElement element, int stageIndex)
+        private void DestroyStatItem(VisualElement element)
         {
-            string stageName = _currentProfile.Stats[stageIndex].Id;
-            TextField field = element.Q<TextField>();
-            field.value = stageName;
+            if (element is StatItem statItem)
+            {
+                statItem.UnregisterEvents();
+            }
         }
 
-        private void OnStageChanged(ChangeEvent<string> evt, int stageIndex)
+        private void BindStageItem(VisualElement element, int statIndex)
         {
-            //[stageIndex] = evt.newValue;
-            _stagesListView.RefreshItems();
-        }
+            if (CurrentProfile == null) return;
 
-        private void UnbindStageItem(VisualElement element, int stageIndex)
-        {
-            TextField field = element.Q<TextField>();
+            if (element is StatItem statItem)
+            {
+                Stat stat = CurrentProfile.Stats[statIndex];
+                statItem.BindData(stat);
+            }
         }
     }
 }

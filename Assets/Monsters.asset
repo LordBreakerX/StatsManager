@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Hard
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  id: 
 --- !u!114 &-4962267617676170750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,7 +24,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Impossible
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  id: 
 --- !u!114 &-847305736803486873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,7 +36,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Medium
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  id: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Insane
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  id: 
 --- !u!114 &5158471316825241474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,4 +78,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Easy
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  id: 

@@ -12,10 +12,13 @@ namespace LordBreakerX.Stats
         protected StatsEditorWindow ParentWindow { get; private set; }
         protected ListView ParentView { get; private set; }
 
-        public StatsListItem(StatsEditorWindow parentWindow, ListView parentView)
+        protected StatsEditorPanel ParentPanel { get; private set; }
+
+        public StatsListItem(StatsEditorPanel parentPanel, ListView parentView)
         {
-            ParentWindow = parentWindow;
+            ParentWindow = parentPanel.ParentWindow;
             ParentView = parentView;
+            ParentPanel = parentPanel;
 
             style.justifyContent = Justify.Center;
 

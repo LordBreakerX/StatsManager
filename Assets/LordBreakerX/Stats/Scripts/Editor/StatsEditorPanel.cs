@@ -5,7 +5,7 @@ namespace LordBreakerX.Stats
 {
     public class StatsEditorPanel : VisualElement
     {
-        protected StatsEditorWindow ParentWindow { get; private set; }
+        public StatsEditorWindow ParentWindow { get; private set; }
 
         public StatsEditorPanel(string labelText, StatsEditorWindow parent)
         {
@@ -36,6 +36,16 @@ namespace LordBreakerX.Stats
         }
 
         protected virtual void OnCreatePanelGUI(VisualElement root)
+        {
+
+        }
+
+        protected virtual void OnEnablePanel()
+        {
+
+        }
+
+        protected virtual void OnDisablePanel()
         {
 
         }
