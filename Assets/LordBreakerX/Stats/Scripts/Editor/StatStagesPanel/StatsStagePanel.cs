@@ -9,11 +9,9 @@ namespace LordBreakerX.Stats
     {
         private Button _createStageButton;
 
-        private List<string> _stages = new List<string>();
-
         private ListView _stagesListView;
 
-        public StatsStagePanel(string labelText) : base(labelText)
+        public StatsStagePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
         }
 
@@ -26,20 +24,35 @@ namespace LordBreakerX.Stats
 
         private void CreateStage()
         {
-            int nextIndex = _stages.Count;
-            _stages.Add($"stage_{nextIndex}");
+            int nextIndex = ParentWindow.Asset.Profiles.Count;
+
+            StatProfile profile = ScriptableObject.CreateInstance<StatProfile>();
+            profile.name = $"Stat Profile {nextIndex}";
+            
+            string parentPath = AssetDatabase.GetAssetPath(ParentWindow.Asset);
+
+            if (!string.IsNullOrEmpty(parentPath))
+            {
+                AssetDatabase.AddObjectToAsset(profile, parentPath);
+                AssetDatabase.SaveAssets();
+            }
+
+            ParentWindow.Asset.Profiles.Add(profile);
             _stagesListView.RefreshItems();
+
+            AssetDatabase.Refresh();
+            EditorUtility.SetDirty(ParentWindow.Asset);
         }
 
         protected override void OnCreatePanelGUI(VisualElement root)
         {
-            _stagesListView = new ListView(_stages);
+            Debug.Log(ParentWindow.Asset);
+            _stagesListView = new ListView(ParentWindow.Asset.Profiles);
             _stagesListView.reorderable = true;
             _stagesListView.makeItem = MakeStageItem;
             _stagesListView.destroyItem = DestroyStageItem;
             _stagesListView.bindItem = BindStageItem;
             _stagesListView.style.flexGrow = 1;
-            _stagesListView.allowAdd = true;
             _stagesListView.Rebuild();
 
             root.Add(_stagesListView);
@@ -57,46 +70,26 @@ namespace LordBreakerX.Stats
 
         private void DestroyStageItem(VisualElement element)
         {
-            TextField field = element.Q<TextField>();
-            field.UnregisterCallback<BlurEvent>(OnBlurStageField);
+            if (element is StatProfileItem profileItem)
+            {
+                profileItem.UnregisterEvents();
+            }
         }
 
         private VisualElement MakeStageItem()
         {
-            StatsListItem<string> stageItem = new StatsListItem<string>(_stages, _stagesListView);
+            StatProfileItem stageItem = new StatProfileItem(ParentWindow, _stagesListView);
+            stageItem.RegisterEvents();
             return stageItem;
         }
 
         private void BindStageItem(VisualElement element, int stageIndex)
         {
-            if (element is StatsListItem<string> stageItem)
+            if (element is StatProfileItem stageItem)
             {
-                string data = _stages[stageIndex];
-                stageItem.BindData(data);
+                StatProfile profile = ParentWindow.Asset.Profiles[stageIndex];
+                stageItem.BindData(profile);
             }
-
-            //string stageName = _stages[stageIndex];
-            //TextField stageField = element.Q<TextField>();
-            //Label stageLabel = element.Q<Label>();
-
-            //stageField.value = stageName;
-            //stageField.userData = stageIndex;
-            //stageLabel.text = stageName;
-        }
-
-        private void OnBlurStageField(BlurEvent evt)
-        {
-            TextField stageField = evt.target as TextField;
-            VisualElement rootElement = stageField.parent;
-            Label stageLabel = rootElement.Q<Label>();
-
-            int stageIndex = (int)stageField.userData;
-            _stages[stageIndex] = stageField.value;
-
-            stageField.style.display = DisplayStyle.None;
-            stageLabel.style.display = DisplayStyle.Flex;
-
-            _stagesListView.RefreshItems();
         }
     }
 }

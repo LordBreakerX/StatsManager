@@ -1,22 +1,20 @@
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
-    public class StatsListItem<TData> : VisualElement
+    public abstract class StatsListItem<TData> : VisualElement
     {
         protected TextField NameTextField { get; private set; }
         protected Label NameLabel { get; private set; }
 
         protected TData Data { get; private set; }
-        protected List<TData> DataSource { get; private set; }
 
+        protected StatsEditorWindow ParentWindow { get; private set; }
         protected ListView ParentView { get; private set; }
 
-        public StatsListItem(List<TData> dataSource, ListView parentView)
+        public StatsListItem(StatsEditorWindow parentWindow, ListView parentView)
         {
-            DataSource = dataSource;
+            ParentWindow = parentWindow;
             ParentView = parentView;
 
             style.justifyContent = Justify.Center;
@@ -42,42 +40,30 @@ namespace LordBreakerX.Stats
             }));
         }
 
-        protected virtual void RenameItem(DropdownMenuAction action)
+        protected abstract void DeleteItem(DropdownMenuAction action);
+
+        protected abstract void DuplicateItem(DropdownMenuAction action);
+
+        protected abstract void RenameItem(DropdownMenuAction action);
+
+        public void BindData(TData data)
         {
-            NameTextField.style.display = DisplayStyle.Flex;
-            NameLabel.style.display = DisplayStyle.None;
-            NameTextField.Focus();
+            Data = data;
+            OnBindData();
         }
 
-        protected virtual void DuplicateItem(DropdownMenuAction action)
-        {
-            if (Data != null && DataSource.Contains(Data))
-            {
-                string itemName = NameLabel.text;
-                int nextIndex = DataSource.IndexOf(Data) + 1;
-                DataSource.Insert(nextIndex, Data);
-                ParentView.RefreshItems();
-            }
-        }
-
-        protected virtual void DeleteItem(DropdownMenuAction action)
-        {
-            if (Data != null && DataSource.Contains(Data))
-            {
-                DataSource.Remove(Data);
-                ParentView.RefreshItems();
-            }
-        }
-
-        public void BindData(TData data) 
-        {
-            
-        }
+        protected abstract void OnBindData();
 
         public void UnbindData()
         {
-
+            OnUnbindData();
+            Data = default;
         }
 
+        protected abstract void OnUnbindData();
+
+        public abstract void RegisterEvents();
+
+        public abstract void UnregisterEvents();
     }
 }

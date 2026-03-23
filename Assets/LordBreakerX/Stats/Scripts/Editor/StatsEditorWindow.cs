@@ -6,10 +6,10 @@ namespace LordBreakerX.Stats
     public class StatsEditorWindow : EditorWindow
     {
         // the title of the editor window
-        private const string WINDOW_TITLE = "Stats Editor";
+        private const string WINDOW_TITLE = " Stats Editor";
 
         // the text of the header of the stages panel
-        private const string STAGE_PANEL_HEADER = "Stat Stages";
+        private const string STAGE_PANEL_HEADER = "Stat Profiles";
 
         // the text of the header of the stats panel
         private const string STATS_PANEL_HEADER = "Stats";
@@ -20,13 +20,35 @@ namespace LordBreakerX.Stats
         // the path to the main stylesheet of the editor
         private const string EDITOR_STYLE = "Assets/LordBreakerX/Stats/StyleSheets/StatEditor.uss";
 
+        private const string EDITOR_SAVE_PATH = "LordBreakerX_StatsEditorWindow_Path";
+
         private StatsEditorToolbar _toolbar;
 
-        [MenuItem("Window/Stats/Editor")]
-        public static void OpenWindow()
+        private StatProfilesAsset _asset;
+
+        public StatProfilesAsset Asset { get { return _asset; } }
+
+        public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
             System.Type sceneViewType = typeof(SceneView);
-            StatsEditorWindow window = GetWindow<StatsEditorWindow>(WINDOW_TITLE, sceneViewType);
+            StatsEditorWindow window = GetWindow<StatsEditorWindow>(namePrefix + WINDOW_TITLE, sceneViewType);
+            window._asset = assetToEdit;
+        }
+
+        private void OnEnable()
+        {
+            string path = EditorPrefs.GetString(EDITOR_SAVE_PATH, null);
+            if (!string.IsNullOrEmpty(path) && Asset == null)
+            {
+                _asset = AssetDatabase.LoadAssetAtPath<StatProfilesAsset>(path);
+            }
+            
+        }
+
+        private void OnDisable()
+        {
+            string path = AssetDatabase.GetAssetPath(_asset);
+            EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
         }
 
         private void CreateGUI()
@@ -37,9 +59,9 @@ namespace LordBreakerX.Stats
 
             _toolbar = new StatsEditorToolbar();
 
-            VisualElement stagePanel = new StatsStagePanel(STAGE_PANEL_HEADER);
-            VisualElement statsPanel = new StatsPanel(STATS_PANEL_HEADER);
-            VisualElement propertiesPanel = new StatsEditorPanel(PROPERTIES_PANEL_HEADER);
+            VisualElement stagePanel = new StatsStagePanel(STAGE_PANEL_HEADER, this);
+            VisualElement statsPanel = new StatsPanel(STATS_PANEL_HEADER, this);
+            VisualElement propertiesPanel = new StatsEditorPanel(PROPERTIES_PANEL_HEADER, this);
 
             VisualElement splitView = CreateSplitView(stagePanel, statsPanel, propertiesPanel);
 

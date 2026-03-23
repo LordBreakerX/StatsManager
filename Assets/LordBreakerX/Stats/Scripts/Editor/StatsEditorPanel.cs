@@ -5,8 +5,12 @@ namespace LordBreakerX.Stats
 {
     public class StatsEditorPanel : VisualElement
     {
-        public StatsEditorPanel(string labelText)
+        protected StatsEditorWindow ParentWindow { get; private set; }
+
+        public StatsEditorPanel(string labelText, StatsEditorWindow parent)
         {
+            ParentWindow = parent;
+
             // creating the header
             VisualElement header = new VisualElement();
             header.AddToClassList("panel-header");

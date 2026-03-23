@@ -8,14 +8,19 @@ namespace LordBreakerX.Stats
     {
         private Button _createStageButton;
 
-        private List<string> _stages = new List<string>();
+        private StatProfile _currentProfile;
 
         private ListView _stagesListView;
 
-        public StatsPanel(string labelText) : base(labelText)
+        public StatsPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
 
         }
+
+        public void ChangeProfile(StatProfile profile)
+        {
+            _currentProfile = profile;
+        } 
 
         protected override void OnExtendHeader(VisualElement header)
         {
@@ -26,13 +31,16 @@ namespace LordBreakerX.Stats
 
         private void CreateStage()
         {
-            _stages.Add("");
-            _stagesListView.RefreshItems();
+            if (_currentProfile != null)
+            {
+                //_currentProfile.Stats.Add();
+                _stagesListView.RefreshItems();
+            }
         }
 
         protected override void OnCreatePanelGUI(VisualElement root)
         {
-            _stagesListView = new ListView(_stages);
+            _stagesListView = new ListView(_currentProfile.Stats);
             _stagesListView.makeItem = MakeStageItem;
             _stagesListView.bindItem = BindStageItem;
             _stagesListView.unbindItem = UnbindStageItem;
@@ -48,14 +56,14 @@ namespace LordBreakerX.Stats
 
         private void BindStageItem(VisualElement element, int stageIndex)
         {
-            string stageName = _stages[stageIndex];
+            string stageName = _currentProfile.Stats[stageIndex].Id;
             TextField field = element.Q<TextField>();
             field.value = stageName;
         }
 
         private void OnStageChanged(ChangeEvent<string> evt, int stageIndex)
         {
-            _stages[stageIndex] = evt.newValue;
+            //[stageIndex] = evt.newValue;
             _stagesListView.RefreshItems();
         }
 
