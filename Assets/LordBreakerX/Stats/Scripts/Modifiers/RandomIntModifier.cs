@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace LordBreakerX.Stats
 {
+    [System.Serializable]
     [CustomStatModifier("Stat Modifier", StatType.Int)]
     public sealed class RandomIntModifier : StatModifier
     {

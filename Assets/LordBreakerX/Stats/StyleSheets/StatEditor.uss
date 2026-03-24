@@ -28,3 +28,28 @@
 Foldout > Toggle {
     background-color: #292929;
 }
+
+/* Text-only "+" button */
+.plus-button {
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+
+    width: 16px;
+    height: 16px;
+
+    justify-content: center;
+    align-items: center;
+
+    -unity-text-align: middle-center;
+    font-size: 20px;
+}
+
+/* Remove hover/active visuals */
+.plus-button:hover {
+    background-color: transparent;
+}
+
+.plus-button:active {
+    background-color: transparent;
+}

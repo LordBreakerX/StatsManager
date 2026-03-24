@@ -38,7 +38,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
   m_Name: Medium
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
-  _stats: []
+  _stats:
+  - _id: First Stat
+    _type: 1
+    _baseValue: 0
+    _modifiers: []
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,17 +88,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
   _stats:
   - _id: Hunger
-    _type: 0
-    _baseValue: 452
+    _type: 1
+    _baseValue: 670.7
+    _modifiers: []
   - _id: Health
-    _type: 0
-    _baseValue: 0
+    _type: 1
+    _baseValue: 2.54
+    _modifiers: []
   - _id: Thirst
     _type: 0
     _baseValue: 0
+    _modifiers: []
   - _id: Stamina
     _type: 0
     _baseValue: 0
+    _modifiers: []
   - _id: Sprint Speed
     _type: 0
     _baseValue: 0
+    _modifiers: []
