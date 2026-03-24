@@ -11,6 +11,7 @@ namespace LordBreakerX.Stats
     {
         private Stat _currentStat;
 
+        private TextField _idField;
         private EnumField _statTypeField;
         private FloatField _statFloatValueField;
         private IntegerField _statIntValueField;
@@ -33,6 +34,7 @@ namespace LordBreakerX.Stats
                 _statTypeField.value = stat.ValueType;
                 _statFloatValueField.value = stat.BaseValue;
                 _statIntValueField.value = (int)stat.BaseValue;
+                _idField.value = stat.GetId();
 
                 switch (stat.ValueType)
                 {
@@ -77,6 +79,9 @@ namespace LordBreakerX.Stats
             Foldout rootElement = new Foldout();
             rootElement.text = "Stat";
 
+            _idField = new TextField("Stat ID");
+            _idField.RegisterCallback<FocusOutEvent>(EditId);
+
             _statTypeField = new EnumField("Stat Type", StatType.Float);
             _statTypeField.RegisterValueChangedCallback(OnStatTypeChanged);
 
@@ -87,11 +92,23 @@ namespace LordBreakerX.Stats
             _statIntValueField.RegisterValueChangedCallback(OnIntValueChanged);
             _statIntValueField.style.display = DisplayStyle.None;
 
+            rootElement.Add(_idField);
             rootElement.Add(_statTypeField);
             rootElement.Add(_statFloatValueField);
             rootElement.Add(_statIntValueField);
 
             return rootElement;
+        }
+
+        private void EditId(FocusOutEvent evt)
+        {
+            if (_currentStat == null) return;
+
+            _currentStat.SetId(_idField.value);
+
+            ParentWindow.CurrentStatsPanel.StatsListView.RefreshItems();
+
+            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
         }
 
         private void OnFloatValueChanged(ChangeEvent<float> evt)

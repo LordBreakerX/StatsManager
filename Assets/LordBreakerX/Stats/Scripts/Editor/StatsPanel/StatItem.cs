@@ -112,7 +112,7 @@ namespace LordBreakerX.Stats
 
         protected override void OnCreateContextMenu(ContextualMenuPopulateEvent evt)
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

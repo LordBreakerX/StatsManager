@@ -89,7 +89,7 @@ MonoBehaviour:
   _stats:
   - _id: Hunger
     _type: 1
-    _baseValue: 670.7
+    _baseValue: 671.3
     _modifiers: []
   - _id: Health
     _type: 1

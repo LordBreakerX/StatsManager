@@ -16,6 +16,8 @@ namespace LordBreakerX.Stats
 
         public StatProfile CurrentProfile { get { return _currentProfile; } }
 
+        public ListView StatsListView { get { return _statsListView; } }
+
         public StatsPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
 
