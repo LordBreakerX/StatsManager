@@ -9,7 +9,12 @@ namespace LordBreakerX.Stats
         private string _id;
 
         [SerializeField]
+        private StatType _type = StatType.Float;
+
+        [SerializeField]
         private float _baseValue;
+
+        public StatType ValueType { get { return _type; } set { _type = value; } }
 
         public float BaseValue { get => _baseValue; set => _baseValue = value; }
 

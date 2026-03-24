@@ -24,3 +24,7 @@
     justify-content: flex-start;
     -unity-text-align: middle-left;
 }
+
+Foldout > Toggle {
+    background-color: #292929;
+}

@@ -84,12 +84,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfile
   _stats:
   - _id: Hunger
-    _baseValue: 0
+    _type: 0
+    _baseValue: 452
   - _id: Health
+    _type: 0
     _baseValue: 0
   - _id: Thirst
+    _type: 0
     _baseValue: 0
   - _id: Stamina
+    _type: 0
     _baseValue: 0
   - _id: Sprint Speed
+    _type: 0
     _baseValue: 0

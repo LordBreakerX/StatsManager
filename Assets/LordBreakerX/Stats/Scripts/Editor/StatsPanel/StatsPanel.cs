@@ -68,9 +68,21 @@ namespace LordBreakerX.Stats
             _statsListView.bindItem = BindStageItem;
             _statsListView.RefreshItems();
 
+            _statsListView.selectionChanged += OnStatChanged;
+
             _createStatButton.SetEnabled(false);
 
             root.Add(_statsListView);
+        }
+
+        private void OnStatChanged(IEnumerable<object> enumerable)
+        {
+            if (_statsListView.selectedItem == null && _currentProfile != null) return;
+
+            if (_statsListView.selectedItem is Stat stat)
+            {
+                ParentWindow.CurrentPropertiesPanel.ChangeStat(stat);
+            }
         }
 
         private VisualElement MakeStatItem()
