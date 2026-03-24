@@ -52,6 +52,10 @@ namespace LordBreakerX.Stats
             else
             {
                 SetEnabled(false);
+                _statTypeField.value = StatType.Float;
+                _statFloatValueField.value = 0;
+                _statIntValueField.value = 0;
+                _idField.value = "";
             }
 
             UpdateStatModifiers();

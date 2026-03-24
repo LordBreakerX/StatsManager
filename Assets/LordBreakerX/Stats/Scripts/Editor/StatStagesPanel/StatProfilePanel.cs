@@ -75,6 +75,7 @@ namespace LordBreakerX.Stats
             if (_stagesListView.selectedItem is StatProfile item)
             {
                 ParentWindow.CurrentStatsPanel.ChangeProfile(item);
+                ParentWindow.CurrentPropertiesPanel.ChangeStat(null);
             }
         }
 
