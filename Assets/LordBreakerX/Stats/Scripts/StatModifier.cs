@@ -3,6 +3,9 @@ namespace LordBreakerX.Stats
     [System.Serializable]
     public class StatModifier
     {
+        [UnityEngine.SerializeField]
+        private float _myValue;
+
         public StatModifier()
         {
 

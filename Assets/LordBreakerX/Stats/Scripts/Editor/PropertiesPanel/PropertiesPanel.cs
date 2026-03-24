@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -52,6 +53,8 @@ namespace LordBreakerX.Stats
             {
                 SetEnabled(false);
             }
+
+            UpdateStatModifiers();
         }
 
         protected override void OnExtendHeader(VisualElement header)
@@ -200,6 +203,7 @@ namespace LordBreakerX.Stats
                         {
                             _currentStat.AddModifier(modifier);
                             EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
+                            UpdateStatModifiers();
                         }
                     });
                 }
@@ -208,6 +212,57 @@ namespace LordBreakerX.Stats
             menu.ShowAsContext();
         }
 
-        
+        public void UpdateStatModifiers()
+        {
+            _modifiersContainer.Clear();
+
+            StatProfile profile = ParentWindow.CurrentStatsPanel.CurrentProfile;
+
+            if (_currentStat == null || profile == null) return;
+
+            SerializedObject serializedProfile = new SerializedObject(profile);
+            SerializedProperty statsProperty = serializedProfile.FindProperty("_stats");
+
+            int statIndex = profile.Stats.IndexOf(_currentStat);
+
+            SerializedProperty currentStatProperty = statsProperty.GetArrayElementAtIndex(statIndex);
+            SerializedProperty modifiersProperty = currentStatProperty.FindPropertyRelative("_modifiers");
+
+            for(int i = 0; i < modifiersProperty.arraySize; i++)
+            {
+                SerializedProperty currentModifierProperty = modifiersProperty.GetArrayElementAtIndex(i);
+
+                _modifiersContainer.Bind(serializedProfile);
+            }
+
+        }
+
+        private static void ShowDerivedFields(VisualElement element, SerializedProperty property, Type targetType, Type baseType)
+        {
+            List<FieldInfo> derivedFields = new List<FieldInfo>();
+
+            Debug.Log(targetType);
+
+            while (targetType != baseType)
+            {
+                FieldInfo[] fields = targetType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                derivedFields.AddRange(fields);
+                targetType = targetType.BaseType;
+            }
+
+            foreach (FieldInfo field in derivedFields)
+            {
+                SerializedProperty fieldProperty = property.FindPropertyRelative(field.Name);
+
+                if (property != null)
+                {
+                    PropertyField propertyField = new PropertyField(fieldProperty);
+                    propertyField.BindProperty(fieldProperty);
+                    element.Add(propertyField);
+                }
+            }
+        }
+
+
     }
 }
