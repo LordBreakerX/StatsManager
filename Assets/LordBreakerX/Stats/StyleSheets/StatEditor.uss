@@ -3,6 +3,10 @@
     width: 2;
 }
 
+.stat-toolbar {
+    borderBottomWidth: 2;
+}
+
 .panel-header {
 	background-color: var(--unity-colors-toolbar-background);
     border-bottom-color: var(--unity-colors-toolbar-border);

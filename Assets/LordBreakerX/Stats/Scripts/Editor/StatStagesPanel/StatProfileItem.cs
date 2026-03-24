@@ -105,5 +105,25 @@ namespace LordBreakerX.Stats
 
             ParentView.RefreshItems();
         }
+
+        protected override void OnCreateContextMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Create Profile Template", (action) =>
+            {
+                if (Data != null)
+                {
+                    string templateName = $"{Data.name}_template";
+                    string path = EditorUtility.SaveFilePanel("Save Profile Template", "Assets", templateName, "asset");
+
+                    path = "Assets" + path.Substring(Application.dataPath.Length);
+
+                    if (!string.IsNullOrEmpty(path)) 
+                    { 
+                        ParentWindow.CurrentToolbar.CreateTemplate(Data, path);
+                        ParentWindow.CurrentToolbar.UpdateTemplates();
+                    }
+                }
+            });
+        }
     }
 }

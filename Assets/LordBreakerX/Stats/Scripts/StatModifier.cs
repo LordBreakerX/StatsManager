@@ -12,5 +12,10 @@ namespace LordBreakerX.Stats
         {
             return currentValue;
         }
+
+        public virtual StatModifier Copy()
+        {
+            return new StatModifier();
+        }
     }
 }

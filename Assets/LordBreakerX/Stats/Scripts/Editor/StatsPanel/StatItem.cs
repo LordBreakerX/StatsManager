@@ -109,5 +109,10 @@ namespace LordBreakerX.Stats
 
             ParentView.RefreshItems();
         }
+
+        protected override void OnCreateContextMenu(ContextualMenuPopulateEvent evt)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

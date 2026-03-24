@@ -38,10 +38,12 @@ namespace LordBreakerX.Stats
                 evt.menu.AppendAction("Rename", RenameItem);
                 evt.menu.AppendAction("Duplicate", DuplicateItem);
                 evt.menu.AppendAction("Delete", DeleteItem);
-
                 evt.menu.AppendSeparator();
+                OnCreateContextMenu(evt);
             }));
         }
+
+        protected abstract void OnCreateContextMenu(ContextualMenuPopulateEvent evt);
 
         protected abstract void DeleteItem(DropdownMenuAction action);
 

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LordBreakerX.Stats
 {
     [System.Serializable]
-    [CustomStatModifier("Stat Modifier", StatType.Int)]
+    [CustomStatModifier("Random Number", StatType.Int)]
     public sealed class RandomIntModifier : StatModifier
     {
         [SerializeField]

@@ -18,6 +18,25 @@ namespace LordBreakerX.Stats
         [SerializeField]
         private List<StatModifier> _modifiers = new List<StatModifier>();
 
+        public Stat()
+        {
+
+        }
+
+        public Stat(Stat toCopy)
+        {
+            _id = toCopy._id;
+            _type = toCopy._type;
+            _baseValue = toCopy._baseValue;
+
+            _modifiers = new List<StatModifier>();
+
+            foreach (StatModifier modifier in toCopy._modifiers)
+            {
+                _modifiers.Add(modifier.Copy());
+            }
+        }
+
         public StatType ValueType { get { return _type; } set { _type = value; } }
 
         public float BaseValue { get => _baseValue; set => _baseValue = value; }

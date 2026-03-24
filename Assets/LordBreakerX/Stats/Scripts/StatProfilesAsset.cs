@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LordBreakerX.Stats
 {
-    [CreateAssetMenu(menuName = "Stats/Profiles Asset")]
+    [CreateAssetMenu(menuName = "Stats Profiles")]
     public class StatProfilesAsset : ScriptableObject
     {
         [SerializeField]

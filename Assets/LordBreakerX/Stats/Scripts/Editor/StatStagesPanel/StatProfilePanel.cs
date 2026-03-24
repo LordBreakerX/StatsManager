@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,6 +13,7 @@ namespace LordBreakerX.Stats
 
         public StatProfilePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
+
         }
 
         protected override void OnExtendHeader(VisualElement header)
@@ -31,12 +33,19 @@ namespace LordBreakerX.Stats
             if (!string.IsNullOrEmpty(parentPath))
             {
                 AssetDatabase.AddObjectToAsset(profile, parentPath);
-                AssetDatabase.SaveAssets();
             }
 
             ParentWindow.Asset.Profiles.Add(profile);
             _stagesListView.Rebuild();
+            
+            if (ParentWindow.CurrentToolbar.CurrentTemplate != null)
+            {
+                IReadOnlyList<Stat> stats = ParentWindow.CurrentToolbar.CurrentTemplate.CopyStats();
 
+                profile.Stats.AddRange(stats);
+            }
+
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.SetDirty(ParentWindow.Asset);
         }

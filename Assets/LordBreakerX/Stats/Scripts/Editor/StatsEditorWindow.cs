@@ -22,8 +22,6 @@ namespace LordBreakerX.Stats
 
         public const string EDITOR_SAVE_PATH = "LordBreakerX_StatsEditorWindow_Path";
 
-        private StatsEditorToolbar _toolbar;
-
         private StatProfilesAsset _asset;
 
         public StatProfilesAsset Asset { get { return _asset; } }
@@ -32,6 +30,8 @@ namespace LordBreakerX.Stats
         public StatsPanel CurrentStatsPanel { get; private set; }
 
         public PropertiesPanel CurrentPropertiesPanel { get; private set; }
+
+        public StatsEditorToolbar CurrentToolbar { get; private set; }  
 
         public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
@@ -64,7 +64,7 @@ namespace LordBreakerX.Stats
 
             AddStyleSheets(root);
 
-            _toolbar = new StatsEditorToolbar();
+            CurrentToolbar = new StatsEditorToolbar();
 
             CurrentProfilePanel = new StatProfilePanel(STAGE_PANEL_HEADER, this);
             CurrentStatsPanel = new StatsPanel(STATS_PANEL_HEADER, this);
@@ -72,7 +72,7 @@ namespace LordBreakerX.Stats
 
             VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, CurrentPropertiesPanel);
 
-            root.Add(_toolbar);
+            root.Add(CurrentToolbar);
             root.Add(splitView);
         }
 

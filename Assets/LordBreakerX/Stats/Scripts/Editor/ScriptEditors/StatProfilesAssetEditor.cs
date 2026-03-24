@@ -24,16 +24,6 @@ namespace LordBreakerX.Stats
 
             root.Add(button);
 
-            VisualElement spacer = new VisualElement();
-            spacer.style.minHeight = 50;
-
-            root.Add(spacer);
-
-            VisualElement defaultInspector = new VisualElement();
-            InspectorElement.FillDefaultInspector(defaultInspector, serializedObject, this);
-            defaultInspector.SetEnabled(false);
-
-            root.Add(defaultInspector);
             return root;
         }
     }
