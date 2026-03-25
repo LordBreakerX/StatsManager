@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -36,8 +36,54 @@ namespace LordBreakerX.Stats
             foldoutToggle.Add(_statModifierButton);
 
             _modifiersListView = new ListView(new List<StatModifier>());
-            
+            _modifiersListView.makeNoneElement = () => new VisualElement();
+            _modifiersListView.makeItem = () => new VisualElement();
+            _modifiersListView.bindItem = BindModifierItem;
+            _modifiersListView.unbindItem = UnbindModifierItem;
+            _modifiersListView.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
+            _modifiersListView.selectionType = SelectionType.None;
+
             Add(_modifiersListView);
+        }
+
+        private void BindModifierItem(VisualElement element, int index)
+        {
+            element.Clear();
+
+            StatProfile profile = _parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile;
+
+            if (_parentPanel.CurrentStat == null || profile == null) return;
+
+            StatModifier currentModifier = _parentPanel.CurrentStat.Modifiers[index];
+
+            Type modifierType = currentModifier.GetType();
+
+
+            SerializedObject serializedProfile = new SerializedObject(profile);
+            SerializedProperty statsProperty = serializedProfile.FindProperty("_stats");
+
+            int statIndex = profile.Stats.IndexOf(_parentPanel.CurrentStat);
+
+            SerializedProperty currentStatProperty = statsProperty.GetArrayElementAtIndex(statIndex);
+            SerializedProperty modifiersProperty = currentStatProperty.FindPropertyRelative("_modifiers");
+
+            SerializedProperty currentModifierProperty = modifiersProperty.GetArrayElementAtIndex(index);
+
+            PropertyField field = new PropertyField(currentModifierProperty, modifierType.Name);
+            field.RegisterCallback<ContextualMenuPopulateEvent>(evt =>
+            {
+                evt.menu.MenuItems().Clear();
+            });
+
+            element.Add(field);
+
+            element.Bind(serializedProfile);
+        }
+
+        private void UnbindModifierItem(VisualElement element, int index)
+        {
+            element.Clear();
+            element.Unbind();
         }
 
         private void CreateStatModifier()
@@ -54,9 +100,12 @@ namespace LordBreakerX.Stats
             {
                 if (result.attribute.ModifierType == stat.ValueType)
                 {
-                    menu.AddItem(new GUIContent(result.attribute.DisplayName), false, () =>
+                    var capturedType = result.modifierType;
+                    var capturedName = result.attribute.DisplayName;
+
+                    menu.AddItem(new GUIContent(capturedName), false, () =>
                     {
-                        StatModifier modifier = (StatModifier)Activator.CreateInstance(result.modifierType);
+                        var modifier = (StatModifier)Activator.CreateInstance(capturedType);
 
                         if (modifier != null)
                         {
@@ -73,54 +122,20 @@ namespace LordBreakerX.Stats
 
         public void UpdateModifiers()
         {
-            _modifiersListView.Rebuild();
+            StatProfile profile = _parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile;
 
-            //_modifiersListView.Rebuild();
-
-            //StatProfile profile = ParentWindow.CurrentStatsPanel.CurrentProfile;
-
-            //if (_currentStat == null || profile == null) return;
-
-            //SerializedObject serializedProfile = new SerializedObject(profile);
-            //SerializedProperty statsProperty = serializedProfile.FindProperty("_stats");
-
-            //int statIndex = profile.Stats.IndexOf(_currentStat);
-
-            //SerializedProperty currentStatProperty = statsProperty.GetArrayElementAtIndex(statIndex);
-            //SerializedProperty modifiersProperty = currentStatProperty.FindPropertyRelative("_modifiers");
-
-            //for (int i = 0; i < modifiersProperty.arraySize; i++)
-            //{
-            //    SerializedProperty currentModifierProperty = modifiersProperty.GetArrayElementAtIndex(i);
-
-            //    _modifiersContainer.Bind(serializedProfile);
-            //}
-        }
-
-        private static void ShowDerivedFields(VisualElement element, SerializedProperty property, Type targetType, Type baseType)
-        {
-            List<FieldInfo> derivedFields = new List<FieldInfo>();
-
-            Debug.Log(targetType);
-
-            while (targetType != baseType)
+            if (_parentPanel.CurrentStat != null && profile != null)
             {
-                FieldInfo[] fields = targetType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-                derivedFields.AddRange(fields);
-                targetType = targetType.BaseType;
+                IList modifiers = (IList)_parentPanel.CurrentStat.Modifiers;
+
+                _modifiersListView.itemsSource = modifiers;
+            }
+            else
+            {
+                _modifiersListView.itemsSource = new List<StatModifier>();
             }
 
-            foreach (FieldInfo field in derivedFields)
-            {
-                SerializedProperty fieldProperty = property.FindPropertyRelative(field.Name);
-
-                if (property != null)
-                {
-                    PropertyField propertyField = new PropertyField(fieldProperty);
-                    propertyField.BindProperty(fieldProperty);
-                    element.Add(propertyField);
-                }
-            }
+                _modifiersListView.Rebuild();
         }
     }
 }

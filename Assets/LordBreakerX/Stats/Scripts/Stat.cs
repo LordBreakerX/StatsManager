@@ -16,6 +16,7 @@ namespace LordBreakerX.Stats
         private float _baseValue;
 
         [SerializeField]
+        [SerializeReference]
         private List<StatModifier> _modifiers = new List<StatModifier>();
 
         public Stat()

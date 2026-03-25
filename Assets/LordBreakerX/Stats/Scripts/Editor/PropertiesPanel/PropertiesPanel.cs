@@ -101,6 +101,8 @@ namespace LordBreakerX.Stats
             rootElement.Add(_statFloatValueField);
             rootElement.Add(_statIntValueField);
 
+            rootElement.style.flexShrink = 0;
+
             return rootElement;
         }
 

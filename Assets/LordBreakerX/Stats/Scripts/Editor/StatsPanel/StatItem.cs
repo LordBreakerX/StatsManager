@@ -105,6 +105,8 @@ namespace LordBreakerX.Stats
             NameTextField.style.display = DisplayStyle.None;
             NameLabel.style.display = DisplayStyle.Flex;
 
+            ParentWindow.CurrentPropertiesPanel.ChangeStat(ParentWindow.CurrentPropertiesPanel.CurrentStat);
+
             EditorUtility.SetDirty(ParentWindow.Asset);
 
             ParentView.RefreshItems();
