@@ -29,7 +29,7 @@
     -unity-text-align: middle-left;
 }
 
-Foldout > Toggle {
+.decorated-foldout > Toggle {
     background-color: #292929;
 }
 

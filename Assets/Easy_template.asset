@@ -10,26 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd028f61c0814404d8c0357adfff5d12, type: 3}
-  m_Name: MyTemplate
+  m_Name: Easy_template
   m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfileTemplate
   _stats:
-  - _id: Hunger
-    _type: 1
-    _baseValue: 670.7
-    _modifiers: []
   - _id: Health
     _type: 1
-    _baseValue: 2.54
-    _modifiers: []
-  - _id: Thirst
-    _type: 0
     _baseValue: 0
     _modifiers: []
   - _id: Stamina
     _type: 0
-    _baseValue: 0
-    _modifiers: []
-  - _id: Sprint Speed
-    _type: 0
-    _baseValue: 0
-    _modifiers: []
+    _baseValue: 152
+    _modifiers:
+    - _myValue: 0

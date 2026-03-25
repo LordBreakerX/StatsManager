@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -17,9 +13,9 @@ namespace LordBreakerX.Stats
         private FloatField _statFloatValueField;
         private IntegerField _statIntValueField;
 
-        private VisualElement _modifiersContainer;
+        private ModifiersFoldout _modifiiersFoldout;
 
-        private Button _statModifierButton;
+        public Stat CurrentStat { get => _currentStat; }
 
         public PropertiesPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
@@ -58,7 +54,7 @@ namespace LordBreakerX.Stats
                 _idField.value = "";
             }
 
-            UpdateStatModifiers();
+            _modifiiersFoldout.UpdateModifiers();
         }
 
         protected override void OnExtendHeader(VisualElement header)
@@ -69,14 +65,15 @@ namespace LordBreakerX.Stats
         protected override void OnCreatePanelGUI(VisualElement root)
         {
             Foldout generalProperties = CreateGeneralPropertiesFoldout();
+            generalProperties.AddToClassList("decorated-foldout");
 
             VisualElement spacer = new VisualElement();
             spacer.style.minHeight = 15;
 
-            Foldout statModifiers = CreateStatModifiersFoldout();
+            _modifiiersFoldout = new ModifiersFoldout(this);
             root.Add(generalProperties);
             root.Add(spacer);
-            root.Add(statModifiers);
+            root.Add(_modifiiersFoldout);
 
             ChangeStat(null);
         }
@@ -162,111 +159,6 @@ namespace LordBreakerX.Stats
 
             EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
         }
-
-        private Foldout CreateStatModifiersFoldout()
-        {
-            Foldout rootElement = new Foldout();
-            rootElement.text = "Stat Modifiers";
-
-            Toggle foldoutToggle = rootElement.Q<Toggle>();
-            foldoutToggle.style.flexDirection = FlexDirection.Row;
-
-            VisualElement spacer = new VisualElement();
-            spacer.style.flexGrow = 1;
-
-            _statModifierButton = new Button(CreateStatModifier);
-            _statModifierButton.text = "+";
-            _statModifierButton.AddToClassList("plus-button");
-
-            foldoutToggle.Add(spacer);
-            foldoutToggle.Add(_statModifierButton);
-
-            _modifiersContainer = new VisualElement();
-            rootElement.Add(_modifiersContainer);
-
-            return rootElement;
-        }
-
-        private void CreateStatModifier()
-        {
-            if (_currentStat == null) return;
-
-            GenericMenu menu = new GenericMenu();
-
-            List<ModifierAttributeResult> modifiers = ModifierAttributeFinder.GetTypesWithAttribute();
-
-            foreach (ModifierAttributeResult result in modifiers)
-            {
-                if (result.attribute.ModifierType == _currentStat.ValueType)
-                {
-                    menu.AddItem(new GUIContent(result.attribute.DisplayName), false, () =>
-                    {
-                        StatModifier modifier = (StatModifier)Activator.CreateInstance(result.modifierType);
-
-                        if (modifier != null)
-                        {
-                            _currentStat.AddModifier(modifier);
-                            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
-                            UpdateStatModifiers();
-                        }
-                    });
-                }
-            }
-
-            menu.ShowAsContext();
-        }
-
-        public void UpdateStatModifiers()
-        {
-            _modifiersContainer.Clear();
-
-            StatProfile profile = ParentWindow.CurrentStatsPanel.CurrentProfile;
-
-            if (_currentStat == null || profile == null) return;
-
-            SerializedObject serializedProfile = new SerializedObject(profile);
-            SerializedProperty statsProperty = serializedProfile.FindProperty("_stats");
-
-            int statIndex = profile.Stats.IndexOf(_currentStat);
-
-            SerializedProperty currentStatProperty = statsProperty.GetArrayElementAtIndex(statIndex);
-            SerializedProperty modifiersProperty = currentStatProperty.FindPropertyRelative("_modifiers");
-
-            for(int i = 0; i < modifiersProperty.arraySize; i++)
-            {
-                SerializedProperty currentModifierProperty = modifiersProperty.GetArrayElementAtIndex(i);
-
-                _modifiersContainer.Bind(serializedProfile);
-            }
-
-        }
-
-        private static void ShowDerivedFields(VisualElement element, SerializedProperty property, Type targetType, Type baseType)
-        {
-            List<FieldInfo> derivedFields = new List<FieldInfo>();
-
-            Debug.Log(targetType);
-
-            while (targetType != baseType)
-            {
-                FieldInfo[] fields = targetType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-                derivedFields.AddRange(fields);
-                targetType = targetType.BaseType;
-            }
-
-            foreach (FieldInfo field in derivedFields)
-            {
-                SerializedProperty fieldProperty = property.FindPropertyRelative(field.Name);
-
-                if (property != null)
-                {
-                    PropertyField propertyField = new PropertyField(fieldProperty);
-                    propertyField.BindProperty(fieldProperty);
-                    element.Add(propertyField);
-                }
-            }
-        }
-
 
     }
 }
