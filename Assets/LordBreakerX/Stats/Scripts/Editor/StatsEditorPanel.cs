@@ -5,49 +5,53 @@ namespace LordBreakerX.Stats
 {
     public class StatsEditorPanel : VisualElement
     {
+        private VisualElement _headerContainer;
+
+        private VisualElement _panelContainer;
+
         public StatsEditorWindow ParentWindow { get; private set; }
 
-        public StatsEditorPanel(string labelText, StatsEditorWindow parent)
+        public virtual string HeaderText { get { return GetType().Name; } }
+
+        public StatsEditorPanel(StatsEditorWindow parent)
         {
             ParentWindow = parent;
 
             // creating the header
-            VisualElement header = new VisualElement();
-            header.AddToClassList("panel-header");
-            Label panelLabel = new Label(labelText);
+            _headerContainer = new VisualElement();
+            _headerContainer.AddToClassList("panel-header");
+            Label panelLabel = new Label(HeaderText);
 
-            header.Add(panelLabel);
-            
-            OnExtendHeader(header);
+            _headerContainer.Add(panelLabel);
 
-            Add(header);
+            Add(_headerContainer);
 
-            VisualElement panelArea = new VisualElement();
-            panelArea.style.flexGrow = 1;
+            _panelContainer = new VisualElement();
+            _panelContainer.style.flexGrow = 1;
 
-            OnCreatePanelGUI(panelArea);
+            Add(_panelContainer);
 
-            Add(panelArea);
         }
 
-        protected virtual void OnExtendHeader(VisualElement header)
+        public void AddToHeader(VisualElement elementToAdd)
+        {
+            _headerContainer.Add(elementToAdd);
+        }
+
+        public void AddToPanel(VisualElement elementToAdd)
+        {
+            _panelContainer.Add(elementToAdd);
+        }
+
+        public void AddManipulatorToPanel(IManipulator manipulator)
+        {
+            _panelContainer.AddManipulator(manipulator);
+        }
+
+        public virtual void UpdatePanel()
         {
 
         }
 
-        protected virtual void OnCreatePanelGUI(VisualElement root)
-        {
-
-        }
-
-        protected virtual void OnEnablePanel()
-        {
-
-        }
-
-        protected virtual void OnDisablePanel()
-        {
-
-        }
     }
 }

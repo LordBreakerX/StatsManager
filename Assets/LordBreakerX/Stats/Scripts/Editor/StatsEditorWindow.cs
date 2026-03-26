@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -7,15 +8,6 @@ namespace LordBreakerX.Stats
     {
         // the title of the editor window
         public const string WINDOW_TITLE = " Stats Editor";
-
-        // the text of the header of the stages panel
-        public const string STAGE_PANEL_HEADER = "Stat Profiles";
-
-        // the text of the header of the stats panel
-        public const string STATS_PANEL_HEADER = "Stats";
-
-        // the text of the header of the stat properties panel
-        public const string PROPERTIES_PANEL_HEADER = "Stat Properties";
 
         // the path to the main stylesheet of the editor
         public const string EDITOR_STYLE = "Assets/LordBreakerX/Stats/StyleSheets/StatEditor.uss";
@@ -39,15 +31,6 @@ namespace LordBreakerX.Stats
             StatsEditorWindow window = GetWindow<StatsEditorWindow>(sceneViewType);
             window.titleContent = new UnityEngine.GUIContent(namePrefix + WINDOW_TITLE);
             window._asset = assetToEdit;
-
-            if (window.CurrentProfilePanel != null)
-                window.CurrentProfilePanel.Reset();
-
-            if (window.CurrentStatsPanel != null)
-                window.CurrentStatsPanel.Reset();
-
-            if (window.CurrentPropertiesPanel != null)
-                window.CurrentPropertiesPanel.Reset();
 
             string path = AssetDatabase.GetAssetPath(window._asset);
             EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
@@ -76,25 +59,16 @@ namespace LordBreakerX.Stats
 
             CurrentToolbar = new StatsEditorToolbar();
 
-            CurrentProfilePanel = new StatProfilePanel(STAGE_PANEL_HEADER, this);
-            CurrentStatsPanel = new StatsPanel(STATS_PANEL_HEADER, this);
-            CurrentPropertiesPanel = new PropertiesPanel(PROPERTIES_PANEL_HEADER, this);
+            CurrentProfilePanel = new StatProfilePanel(this);
+            CurrentStatsPanel = new StatsPanel(this);
+            CurrentPropertiesPanel = new PropertiesPanel(this);
 
             VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, CurrentPropertiesPanel);
 
             root.Add(CurrentToolbar);
             root.Add(splitView);
 
-            if (Asset.Profiles.Count > 0) 
-                CurrentProfilePanel.ProfilesView.SetSelection(0);
-
-            if (CurrentStatsPanel.CurrentProfile != null)
-            {
-                if (CurrentStatsPanel.CurrentProfile.Stats.Count > 0)
-                {
-                    CurrentStatsPanel.StatsListView.SetSelection(0);
-                }
-            }
+            UpdatePanels();
         }
 
         private void AddStyleSheets(VisualElement root)
@@ -117,6 +91,18 @@ namespace LordBreakerX.Stats
             mainSplit.style.flexGrow = 1;
 
             return mainSplit;
+        }
+
+        public void UpdatePanels()
+        {
+            if (CurrentProfilePanel != null)
+                CurrentProfilePanel.UpdatePanel();
+
+            if (CurrentStatsPanel != null)
+                CurrentStatsPanel.UpdatePanel();
+
+            if (CurrentPropertiesPanel != null)
+                CurrentPropertiesPanel.UpdatePanel();
         }
     }
 }

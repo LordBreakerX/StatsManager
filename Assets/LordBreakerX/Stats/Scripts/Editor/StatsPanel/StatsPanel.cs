@@ -1,147 +1,68 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
-    public class StatsPanel : StatsEditorPanel
+    public class StatsPanel : StatsEditorListPanel<Stat>
     {
-        private Button _createStatButton;
+        public override string HeaderText => "Stats";
 
-        private StatProfile _currentProfile;
+        public override string AddElementTitle => "Add Stat";
 
-        private ListView _statsListView;
-
-        public StatProfile CurrentProfile { get { return _currentProfile; } }
-
-        public ListView StatsListView { get { return _statsListView; } }
-
-        public StatsPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
+        public StatsPanel(StatsEditorWindow parent) : base(parent)
         {
-
-        }
-
-        public void Reset()
-        {
-            StatsListView.itemsSource = ParentWindow.Asset.Profiles;
-
-            if (ParentWindow.Asset.Profiles.Count > 0)
-            {
-                ChangeProfile(ParentWindow.Asset.Profiles[0]);
-            }
-            else
-            {
-                ChangeProfile(null);
-            }
-        }
-
-        public void ChangeProfile(StatProfile profile)
-        {
-            _currentProfile = profile;
             
-            if (_currentProfile != null)
+        }
+
+        public override void UpdatePanel()
+        {
+            CurrentListView.itemsSource = GetItemsSource();
+            CurrentListView.Rebuild();
+
+            if (ParentWindow.CurrentProfilePanel.SelectedItem != null)
             {
-                _statsListView.itemsSource = _currentProfile.Stats;
-                _statsListView.Rebuild();
-                _createStatButton.SetEnabled(true);
+                CreateButton.SetEnabled(true);
             }
             else
             {
-                _statsListView.itemsSource = new List<StatProfile>();
-                _statsListView.Rebuild();
-                _createStatButton.SetEnabled(false);
+                CreateButton.SetEnabled(false);
             }
+        }
 
-            _statsListView.schedule.Execute(() =>
+        protected override List<Stat> GetItemsSource()
+        {
+            if (ParentWindow.CurrentProfilePanel.SelectedItem != null)
             {
-                _statsListView.SetSelection(0);
-
-                if (_currentProfile != null)
-                {
-                    if (CurrentProfile.Stats.Count > 0)
-                        ParentWindow.CurrentPropertiesPanel.ChangeStat(CurrentProfile.Stats[0]);
-                }
-            });
+                return ParentWindow.CurrentProfilePanel.SelectedItem.Stats;
+            }
+            else
+            {
+                return new List<Stat>();
+            }
         } 
 
-        protected override void OnExtendHeader(VisualElement header)
+        protected override void CreateElement()
         {
-            VisualElement spacer = new VisualElement();
-            spacer.style.flexGrow = 1;
+            StatProfile selectedProfile = ParentWindow.CurrentProfilePanel.SelectedItem;
 
-            header.Add(spacer);
-
-            _createStatButton = new Button(CreateStat);
-            _createStatButton.text = "+";
-            _createStatButton.AddToClassList("plus-button");
-
-            header.Add(_createStatButton);
-        }
-
-        private void CreateStat()
-        {
-            if (_currentProfile == null) return;
-
-            Stat stat = new Stat();
-            stat.SetId("");
-
-            _currentProfile.Stats.Add(stat);
-            _statsListView.RefreshItems();
-
-            EditorUtility.SetDirty(ParentWindow.Asset);
-            EditorUtility.SetDirty(CurrentProfile);
-        }
-
-        protected override void OnCreatePanelGUI(VisualElement root)
-        {
-            _statsListView = new ListView(new List<Stat>());
-            _statsListView.makeItem = MakeStatItem;
-            _statsListView.destroyItem = DestroyStatItem;
-            _statsListView.bindItem = BindStageItem;
-
-            _statsListView.selectionChanged += OnStatChanged;
-
-            _statsListView.RefreshItems();
-
-            _createStatButton.SetEnabled(false);
-
-            root.Add(_statsListView);
-        }
-
-        private void OnStatChanged(IEnumerable<object> enumerable)
-        {
-            if (_statsListView.selectedItem == null && _currentProfile != null) return;
-
-            if (_statsListView.selectedItem is Stat stat)
+            if (selectedProfile != null)
             {
-                ParentWindow.CurrentPropertiesPanel.ChangeStat(stat);
+                Stat stat = new Stat();
+                stat.SetId("");
+
+                selectedProfile.Stats.Add(stat);
+                CurrentListView.RefreshItems();
+
+                EditorUtility.SetDirty(ParentWindow.Asset);
+                EditorUtility.SetDirty(selectedProfile);
             }
         }
 
-        private VisualElement MakeStatItem()
+        protected override StatsListItem<Stat> MakeElementItem()
         {
-            StatItem statItem = new StatItem(this, _statsListView);
+            StatItem statItem = new StatItem(this, CurrentListView);
             statItem.RegisterEvents();
             return statItem;
-        }
-
-        private void DestroyStatItem(VisualElement element)
-        {
-            if (element is StatItem statItem)
-            {
-                statItem.UnregisterEvents();
-            }
-        }
-
-        private void BindStageItem(VisualElement element, int statIndex)
-        {
-            if (CurrentProfile == null) return;
-
-            if (element is StatItem statItem)
-            {
-                Stat stat = CurrentProfile.Stats[statIndex];
-                statItem.BindData(stat);
-            }
         }
     }
 }

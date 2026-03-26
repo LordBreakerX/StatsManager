@@ -14,17 +14,19 @@ namespace LordBreakerX.Stats
         {
             StatsPanel statsPanel = ParentPanel as StatsPanel;
 
-            if (statsPanel.CurrentProfile == null) return;
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
 
-            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+            List<Stat> stats = profile.Stats;
 
             if (Data.GetId() == "")
             {
                 int index = stats.IndexOf(Data);
                 Data.SetId($"Stat Profile {index}");
                 NameTextField.value = Data.GetId();
-                EditorUtility.SetDirty(statsPanel.CurrentProfile);
+
+                EditorUtility.SetDirty(profile);
                 EditorUtility.SetDirty(ParentWindow.Asset);
+
                 NameTextField.style.display = DisplayStyle.Flex;
             }
             else
@@ -43,11 +45,11 @@ namespace LordBreakerX.Stats
 
         protected override void DeleteItem(DropdownMenuAction action)
         {
-            StatsPanel statsPanel = ParentPanel as StatsPanel;
+            StatProfile profile = ParentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
 
-            if (statsPanel.CurrentProfile == null) return;
+            if (profile == null) return;
 
-            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+            List<Stat> stats = profile.Stats;
 
             if (Data != null && stats.Contains(Data))
             {
@@ -55,16 +57,17 @@ namespace LordBreakerX.Stats
 
                 ParentView.RefreshItems();
                 EditorUtility.SetDirty(ParentWindow.Asset);
+                EditorUtility.SetDirty(profile);
             }
         }
 
         protected override void DuplicateItem(DropdownMenuAction action)
         {
-            StatsPanel statsPanel = ParentPanel as StatsPanel;
+            StatProfile profile = ParentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
 
-            if (statsPanel.CurrentProfile == null) return;
+            if (profile == null) return;
 
-            List<Stat> stats = statsPanel.CurrentProfile.Stats;
+            List<Stat> stats = profile.Stats;
 
             if (Data != null && stats.Contains(Data))
             {
@@ -72,6 +75,8 @@ namespace LordBreakerX.Stats
                 int nextIndex = stats.IndexOf(Data) + 1;
                 stats.Insert(nextIndex, Data);
                 ParentView.RefreshItems();
+
+                EditorUtility.SetDirty(profile);
             }
         }
 
@@ -94,18 +99,20 @@ namespace LordBreakerX.Stats
 
         private void OnBlur(BlurEvent evt)
         {
-            StatsPanel statsPanel = ParentPanel as StatsPanel;
+            StatProfile profile = ParentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
 
-            if (statsPanel.CurrentProfile != null)
+            if (profile != null)
             {
-                int statIndex = statsPanel.CurrentProfile.Stats.IndexOf(Data);
-                statsPanel.CurrentProfile.Stats[statIndex].SetId(NameTextField.value);
+                int statIndex = profile.Stats.IndexOf(Data);
+                profile.Stats[statIndex].SetId(NameTextField.value);
+
+                EditorUtility.SetDirty(profile);
             }
 
             NameTextField.style.display = DisplayStyle.None;
             NameLabel.style.display = DisplayStyle.Flex;
 
-            ParentWindow.CurrentPropertiesPanel.ChangeStat(ParentWindow.CurrentPropertiesPanel.CurrentStat);
+            ParentWindow.UpdatePanels();
 
             EditorUtility.SetDirty(ParentWindow.Asset);
 

@@ -50,7 +50,7 @@ namespace LordBreakerX.Stats
         {
             element.Clear();
 
-            StatProfile profile = _parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile;
+            StatProfile profile = _parentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
 
             if (_parentPanel.CurrentStat == null || profile == null) return;
 
@@ -82,14 +82,16 @@ namespace LordBreakerX.Stats
 
         private void RemoveStatModifier(int modifierIndex)
         {
+            StatProfile profile = _parentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
+
             if (_parentPanel.CurrentStat == null) return;
-            if (_parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile == null) return;
+            if (profile == null) return;
 
             _parentPanel.CurrentStat.RemoveModifier(modifierIndex);
 
             _modifiersListView.Rebuild();
 
-            EditorUtility.SetDirty(_parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile);
+            EditorUtility.SetDirty(profile);
         }
 
         private void UnbindModifierItem(VisualElement element, int index)
@@ -102,7 +104,9 @@ namespace LordBreakerX.Stats
         {
             Stat stat = _parentPanel.CurrentStat;
 
-            if (stat == null) return;
+            StatProfile profile = _parentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
+
+            if (stat == null || profile == null) return;
 
             GenericMenu menu = new GenericMenu();
 
@@ -122,7 +126,7 @@ namespace LordBreakerX.Stats
                         if (modifier != null)
                         {
                             stat.AddModifier(modifier);
-                            EditorUtility.SetDirty(_parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile);
+                            EditorUtility.SetDirty(profile);
                             UpdateModifiers();
                         }
                     });
@@ -134,7 +138,7 @@ namespace LordBreakerX.Stats
 
         public void UpdateModifiers()
         {
-            StatProfile profile = _parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile;
+            StatProfile profile = _parentPanel.ParentWindow.CurrentProfilePanel.SelectedItem;
 
             if (_parentPanel.CurrentStat != null && profile != null)
             {

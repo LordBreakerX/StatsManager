@@ -17,38 +17,34 @@ namespace LordBreakerX.Stats
 
         public Stat CurrentStat { get => _currentStat; }
 
-        public PropertiesPanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
+        public override string HeaderText => "Stat Properties";
+
+        public PropertiesPanel(StatsEditorWindow parent) : base(parent)
         {
+            Foldout generalProperties = CreateGeneralPropertiesFoldout();
+            generalProperties.AddToClassList("decorated-foldout");
+
+            VisualElement spacer = new VisualElement();
+            spacer.style.minHeight = 15;
+
+            _modifiiersFoldout = new ModifiersFoldout(this);
+            AddToPanel(generalProperties);
+            AddToPanel(spacer);
+            AddToPanel(_modifiiersFoldout);
         }
 
-        public void Reset()
+        public override void UpdatePanel()
         {
-            ListView view = ParentWindow.CurrentStatsPanel.StatsListView;
-            StatProfile profile = ParentWindow.CurrentStatsPanel.CurrentProfile;
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
 
-                view.schedule.Execute(() =>
-                {
-                    view.SetSelection(0);
+            Stat stat = ParentWindow.CurrentStatsPanel.SelectedItem;
 
-                    if (profile != null)
-                    {
-                        if (profile.Stats.Count > 0)
-                            ParentWindow.CurrentPropertiesPanel.ChangeStat(profile.Stats[0]);
-                    }
-                    else
-                    {
-                        ParentWindow.CurrentPropertiesPanel.ChangeStat(null);
-                    }
-                });
-        }
-
-        public void ChangeStat(Stat stat)
-        {
             _currentStat = stat;
 
-            if (_currentStat != null)
+            if (profile != null && stat != null)
             {
                 SetEnabled(true);
+
                 _statTypeField.value = stat.ValueType;
                 _statFloatValueField.value = stat.BaseValue;
                 _statIntValueField.value = (int)stat.BaseValue;
@@ -69,6 +65,7 @@ namespace LordBreakerX.Stats
             else
             {
                 SetEnabled(false);
+
                 _statTypeField.value = StatType.Float;
                 _statFloatValueField.value = 0;
                 _statIntValueField.value = 0;
@@ -76,27 +73,6 @@ namespace LordBreakerX.Stats
             }
 
             _modifiiersFoldout.UpdateModifiers();
-        }
-
-        protected override void OnExtendHeader(VisualElement header)
-        {
-
-        }
-
-        protected override void OnCreatePanelGUI(VisualElement root)
-        {
-            Foldout generalProperties = CreateGeneralPropertiesFoldout();
-            generalProperties.AddToClassList("decorated-foldout");
-
-            VisualElement spacer = new VisualElement();
-            spacer.style.minHeight = 15;
-
-            _modifiiersFoldout = new ModifiersFoldout(this);
-            root.Add(generalProperties);
-            root.Add(spacer);
-            root.Add(_modifiiersFoldout);
-
-            ChangeStat(null);
         }
 
         private Foldout CreateGeneralPropertiesFoldout()
@@ -133,9 +109,11 @@ namespace LordBreakerX.Stats
 
             _currentStat.SetId(_idField.value);
 
-            ParentWindow.CurrentStatsPanel.StatsListView.RefreshItems();
+            ParentWindow.CurrentStatsPanel.UpdatePanel();
 
-            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
+
+            EditorUtility.SetDirty(profile);
         }
 
         private void OnFloatValueChanged(ChangeEvent<float> evt)
@@ -145,7 +123,8 @@ namespace LordBreakerX.Stats
 
             _currentStat.BaseValue = evt.newValue;
 
-            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
+            EditorUtility.SetDirty(profile);
         }
 
         private void OnIntValueChanged(ChangeEvent<int> evt)
@@ -155,7 +134,8 @@ namespace LordBreakerX.Stats
 
             _currentStat.BaseValue = evt.newValue;
 
-            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
+            EditorUtility.SetDirty(profile);
         }
 
         private void OnStatTypeChanged(ChangeEvent<Enum> evt)
@@ -180,7 +160,8 @@ namespace LordBreakerX.Stats
                     break;
             }
 
-            EditorUtility.SetDirty(ParentWindow.CurrentStatsPanel.CurrentProfile);
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
+            EditorUtility.SetDirty(profile);
         }
 
     }

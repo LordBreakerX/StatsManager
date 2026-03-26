@@ -1,47 +1,44 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
-    public class StatProfilePanel : StatsEditorPanel
+    public class StatProfilePanel : StatsEditorListPanel<StatProfile>
     {
-        private Button _createStageButton;
 
-        private ListView _stagesListView;
+        public override string HeaderText => "Stat Profiles";
 
-        public ListView ProfilesView { get { return _stagesListView; } }
+        public override string AddElementTitle => "Add Stat Profile";
 
-        public StatProfilePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
+        public StatProfilePanel(StatsEditorWindow parent) : base(parent)
         {
-
+            
         }
 
-        public void Reset()
+        public override void UpdatePanel()
         {
-            ProfilesView.itemsSource = ParentWindow.Asset.Profiles;
-            ProfilesView.Rebuild();
+            CurrentListView.itemsSource = GetItemsSource();
+            CurrentListView.Rebuild();
         }
 
-        protected override void OnExtendHeader(VisualElement header)
+        protected override StatsListItem<StatProfile> MakeElementItem()
         {
-            VisualElement spacer = new VisualElement();
-            spacer.style.flexGrow = 1;
-
-            header.Add(spacer); 
-
-            _createStageButton = new Button(CreateStatProfile);
-            _createStageButton.text = "+";
-            _createStageButton.AddToClassList("plus-button");
-            header.Add(_createStageButton);
+            StatProfileItem stageItem = new StatProfileItem(this, CurrentListView);
+            stageItem.RegisterEvents();
+            return stageItem;
         }
 
-        private void CreateStatProfile()
+        protected override List<StatProfile> GetItemsSource()
+        {
+            return ParentWindow.Asset.Profiles;
+        }
+
+        protected override void CreateElement()
         {
             StatProfile profile = ScriptableObject.CreateInstance<StatProfile>();
             profile.name = "";
-            
+
             string parentPath = AssetDatabase.GetAssetPath(ParentWindow.Asset);
 
             if (!string.IsNullOrEmpty(parentPath))
@@ -50,8 +47,8 @@ namespace LordBreakerX.Stats
             }
 
             ParentWindow.Asset.Profiles.Add(profile);
-            _stagesListView.Rebuild();
-            
+            CurrentListView.Rebuild();
+
             if (ParentWindow.CurrentToolbar.CurrentTemplate != null)
             {
                 IReadOnlyList<Stat> stats = ParentWindow.CurrentToolbar.CurrentTemplate.CopyStats();
@@ -62,66 +59,6 @@ namespace LordBreakerX.Stats
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.SetDirty(ParentWindow.Asset);
-        }
-
-        protected override void OnCreatePanelGUI(VisualElement root)
-        {
-            _stagesListView = new ListView(ParentWindow.Asset.Profiles);
-            _stagesListView.reorderable = true;
-            _stagesListView.makeItem = MakeStageItem;
-            _stagesListView.destroyItem = DestroyStageItem;
-            _stagesListView.bindItem = BindStageItem;
-            _stagesListView.style.flexGrow = 1;
-
-            _stagesListView.selectionChanged += OnProfileChanged;
-            _stagesListView.Rebuild();
-
-            root.Add(_stagesListView);
-
-            root.AddManipulator(new ContextualMenuManipulator(CreateContextMenu));
-        }
-
-        private void OnProfileChanged(System.Collections.Generic.IEnumerable<object> obj)
-        {
-            if (_stagesListView.selectedItem == null) return;
-
-            if (_stagesListView.selectedItem is StatProfile item)
-            {
-                ParentWindow.CurrentStatsPanel.ChangeProfile(item);
-                ParentWindow.CurrentPropertiesPanel.ChangeStat(null);
-            }
-        }
-
-        private void CreateContextMenu(ContextualMenuPopulateEvent evt)
-        {
-            evt.menu.AppendAction("Add Stat Stage", (action) =>
-            {
-                CreateStatProfile();
-            });
-        }
-
-        private void DestroyStageItem(VisualElement element)
-        {
-            if (element is StatProfileItem profileItem)
-            {
-                profileItem.UnregisterEvents();
-            }
-        }
-
-        private VisualElement MakeStageItem()
-        {
-            StatProfileItem stageItem = new StatProfileItem(this, _stagesListView);
-            stageItem.RegisterEvents();
-            return stageItem;
-        }
-
-        private void BindStageItem(VisualElement element, int stageIndex)
-        {
-            if (element is StatProfileItem stageItem)
-            {
-                StatProfile profile = ParentWindow.Asset.Profiles[stageIndex];
-                stageItem.BindData(profile);
-            }
         }
     }
 }
