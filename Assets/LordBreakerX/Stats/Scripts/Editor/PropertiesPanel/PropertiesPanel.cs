@@ -21,6 +21,27 @@ namespace LordBreakerX.Stats
         {
         }
 
+        public void Reset()
+        {
+            ListView view = ParentWindow.CurrentStatsPanel.StatsListView;
+            StatProfile profile = ParentWindow.CurrentStatsPanel.CurrentProfile;
+
+                view.schedule.Execute(() =>
+                {
+                    view.SetSelection(0);
+
+                    if (profile != null)
+                    {
+                        if (profile.Stats.Count > 0)
+                            ParentWindow.CurrentPropertiesPanel.ChangeStat(profile.Stats[0]);
+                    }
+                    else
+                    {
+                        ParentWindow.CurrentPropertiesPanel.ChangeStat(null);
+                    }
+                });
+        }
+
         public void ChangeStat(Stat stat)
         {
             _currentStat = stat;

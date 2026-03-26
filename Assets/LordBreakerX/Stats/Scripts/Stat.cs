@@ -80,5 +80,9 @@ namespace LordBreakerX.Stats
             } 
         }
 
+        public void RemoveModifier(int index)
+        {
+            _modifiers.RemoveAt(index);
+        }
     }
 }

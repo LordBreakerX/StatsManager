@@ -11,15 +11,29 @@ namespace LordBreakerX.Stats
 
         private ListView _stagesListView;
 
+        public ListView ProfilesView { get { return _stagesListView; } }
+
         public StatProfilePanel(string labelText, StatsEditorWindow parent) : base(labelText, parent)
         {
 
         }
 
+        public void Reset()
+        {
+            ProfilesView.itemsSource = ParentWindow.Asset.Profiles;
+            ProfilesView.Rebuild();
+        }
+
         protected override void OnExtendHeader(VisualElement header)
         {
+            VisualElement spacer = new VisualElement();
+            spacer.style.flexGrow = 1;
+
+            header.Add(spacer); 
+
             _createStageButton = new Button(CreateStatProfile);
             _createStageButton.text = "+";
+            _createStageButton.AddToClassList("plus-button");
             header.Add(_createStageButton);
         }
 
@@ -52,16 +66,15 @@ namespace LordBreakerX.Stats
 
         protected override void OnCreatePanelGUI(VisualElement root)
         {
-            Debug.Log(ParentWindow.Asset);
             _stagesListView = new ListView(ParentWindow.Asset.Profiles);
             _stagesListView.reorderable = true;
             _stagesListView.makeItem = MakeStageItem;
             _stagesListView.destroyItem = DestroyStageItem;
             _stagesListView.bindItem = BindStageItem;
             _stagesListView.style.flexGrow = 1;
-            _stagesListView.Rebuild();
 
             _stagesListView.selectionChanged += OnProfileChanged;
+            _stagesListView.Rebuild();
 
             root.Add(_stagesListView);
 

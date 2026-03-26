@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -23,6 +21,20 @@ namespace LordBreakerX.Stats
 
         }
 
+        public void Reset()
+        {
+            StatsListView.itemsSource = ParentWindow.Asset.Profiles;
+
+            if (ParentWindow.Asset.Profiles.Count > 0)
+            {
+                ChangeProfile(ParentWindow.Asset.Profiles[0]);
+            }
+            else
+            {
+                ChangeProfile(null);
+            }
+        }
+
         public void ChangeProfile(StatProfile profile)
         {
             _currentProfile = profile;
@@ -30,21 +42,39 @@ namespace LordBreakerX.Stats
             if (_currentProfile != null)
             {
                 _statsListView.itemsSource = _currentProfile.Stats;
-                _statsListView.RefreshItems();
+                _statsListView.Rebuild();
                 _createStatButton.SetEnabled(true);
             }
             else
             {
                 _statsListView.itemsSource = new List<StatProfile>();
-                _statsListView.RefreshItems();
+                _statsListView.Rebuild();
                 _createStatButton.SetEnabled(false);
             }
+
+            _statsListView.schedule.Execute(() =>
+            {
+                _statsListView.SetSelection(0);
+
+                if (_currentProfile != null)
+                {
+                    if (CurrentProfile.Stats.Count > 0)
+                        ParentWindow.CurrentPropertiesPanel.ChangeStat(CurrentProfile.Stats[0]);
+                }
+            });
         } 
 
         protected override void OnExtendHeader(VisualElement header)
         {
+            VisualElement spacer = new VisualElement();
+            spacer.style.flexGrow = 1;
+
+            header.Add(spacer);
+
             _createStatButton = new Button(CreateStat);
             _createStatButton.text = "+";
+            _createStatButton.AddToClassList("plus-button");
+
             header.Add(_createStatButton);
         }
 
@@ -68,9 +98,10 @@ namespace LordBreakerX.Stats
             _statsListView.makeItem = MakeStatItem;
             _statsListView.destroyItem = DestroyStatItem;
             _statsListView.bindItem = BindStageItem;
-            _statsListView.RefreshItems();
 
             _statsListView.selectionChanged += OnStatChanged;
+
+            _statsListView.RefreshItems();
 
             _createStatButton.SetEnabled(false);
 

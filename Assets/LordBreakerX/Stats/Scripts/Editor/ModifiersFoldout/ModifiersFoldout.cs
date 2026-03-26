@@ -80,6 +80,18 @@ namespace LordBreakerX.Stats
             element.Bind(serializedProfile);
         }
 
+        private void RemoveStatModifier(int modifierIndex)
+        {
+            if (_parentPanel.CurrentStat == null) return;
+            if (_parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile == null) return;
+
+            _parentPanel.CurrentStat.RemoveModifier(modifierIndex);
+
+            _modifiersListView.Rebuild();
+
+            EditorUtility.SetDirty(_parentPanel.ParentWindow.CurrentStatsPanel.CurrentProfile);
+        }
+
         private void UnbindModifierItem(VisualElement element, int index)
         {
             element.Clear();

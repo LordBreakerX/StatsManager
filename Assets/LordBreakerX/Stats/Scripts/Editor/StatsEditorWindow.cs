@@ -36,8 +36,18 @@ namespace LordBreakerX.Stats
         public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
             System.Type sceneViewType = typeof(SceneView);
-            StatsEditorWindow window = GetWindow<StatsEditorWindow>(namePrefix + WINDOW_TITLE, sceneViewType);
+            StatsEditorWindow window = GetWindow<StatsEditorWindow>(sceneViewType);
+            window.titleContent = new UnityEngine.GUIContent(namePrefix + WINDOW_TITLE);
             window._asset = assetToEdit;
+
+            if (window.CurrentProfilePanel != null)
+                window.CurrentProfilePanel.Reset();
+
+            if (window.CurrentStatsPanel != null)
+                window.CurrentStatsPanel.Reset();
+
+            if (window.CurrentPropertiesPanel != null)
+                window.CurrentPropertiesPanel.Reset();
 
             string path = AssetDatabase.GetAssetPath(window._asset);
             EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
@@ -74,6 +84,17 @@ namespace LordBreakerX.Stats
 
             root.Add(CurrentToolbar);
             root.Add(splitView);
+
+            if (Asset.Profiles.Count > 0) 
+                CurrentProfilePanel.ProfilesView.SetSelection(0);
+
+            if (CurrentStatsPanel.CurrentProfile != null)
+            {
+                if (CurrentStatsPanel.CurrentProfile.Stats.Count > 0)
+                {
+                    CurrentStatsPanel.StatsListView.SetSelection(0);
+                }
+            }
         }
 
         private void AddStyleSheets(VisualElement root)
