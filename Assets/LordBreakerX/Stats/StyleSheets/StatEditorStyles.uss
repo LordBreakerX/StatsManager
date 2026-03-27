@@ -1,11 +1,3 @@
-.unity-two-pane-split-view__dragline-anchor {
-    background-color: #191919;
-    width: 2;
-}
-
-.stat-toolbar {
-    borderBottomWidth: 2;
-}
 
 .panel-header {
 	background-color: var(--unity-colors-toolbar-background);
@@ -29,31 +21,22 @@
     -unity-text-align: middle-left;
 }
 
-.decorated-foldout > Toggle {
-    background-color: #292929;
+.panel-container {
+    flex-grow: 1;
 }
 
-/* Text-only "+" button */
-.plus-button {
+.editor-panel {
+    flex-grow: 1;
+    min-width:200;
+}
+
+#properties-panel #headerButton {
+    display: none;
+}
+
+#headerButton {
     background-color: transparent;
     border-width: 0;
     padding: 0;
-
-    width: 16px;
-    height: 16px;
-
-    justify-content: center;
-    align-items: center;
-
-    -unity-text-align: middle-center;
     font-size: 20px;
-}
-
-/* Remove hover/active visuals */
-.plus-button:hover {
-    background-color: transparent;
-}
-
-.plus-button:active {
-    background-color: transparent;
 }

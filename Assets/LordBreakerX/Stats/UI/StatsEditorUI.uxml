@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+
+    <ui:Template src="EditorPanel.uxml" name="EditorPanel"/>
+
+    <ui:TwoPaneSplitView name="first-split" style="flex-grow: 1;">
+        <!-- Profiles Panel -->
+        <ui:Instance template="EditorPanel" name="profile-panel" class="editor-panel">
+            <ui:AttributeOverrides element-name="headerLabel" text="Stat Profiles" />
+        </ui:Instance>
+        <ui:TwoPaneSplitView name="second-split" style="flex-grow: 1;">
+            <!-- Stats Panel -->
+            <ui:Instance template="EditorPanel" name="stats-panel" class="editor-panel">
+                <ui:AttributeOverrides element-name="headerLabel" text="Stats" />
+            </ui:Instance>
+            <!-- Properties Panel -->
+            <ui:Instance template="EditorPanel" name="properties-panel">
+                <ui:AttributeOverrides element-name="headerLabel" text="Stat Properties" />
+            </ui:Instance>
+        </ui:TwoPaneSplitView>
+    </ui:TwoPaneSplitView>
+</ui:UXML>

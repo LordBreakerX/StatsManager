@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement class="editor-panel">
+        
+        <!-- Header -->
+        <ui:VisualElement name="header" class="panel-header">
+            <ui:Label name="headerLabel" text="Insert Title"/>
+            <ui:VisualElement style="flex-grow:1"/>
+            <ui:Button name="headerButton" text="+"/>
+        </ui:VisualElement>
+
+
+        <!-- Panel Container -->
+        <ui:VisualElement name="panelContainer" class="panel-container" content-container="contents"/>
+
+    </ui:VisualElement>
+</ui:UXML>

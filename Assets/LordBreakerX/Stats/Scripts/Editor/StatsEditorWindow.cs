@@ -1,26 +1,16 @@
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
     public class StatsEditorWindow : EditorWindow
     {
-        // the title of the editor window
-        public const string WINDOW_TITLE = " Stats Editor";
+        [SerializeField]
+        private VisualTreeAsset _editorUI;
 
-        // the text of the header of the stages panel
-        public const string STAGE_PANEL_HEADER = "Stat Profiles";
-
-        // the text of the header of the stats panel
-        public const string STATS_PANEL_HEADER = "Stats";
-
-        // the text of the header of the stat properties panel
-        public const string PROPERTIES_PANEL_HEADER = "Stat Properties";
-
-        // the path to the main stylesheet of the editor
-        public const string EDITOR_STYLE = "Assets/LordBreakerX/Stats/StyleSheets/StatEditor.uss";
-
-        public const string EDITOR_SAVE_PATH = "LordBreakerX_StatsEditorWindow_Path";
+        [SerializeField]
+        private StyleSheet _editorStyles;
 
         private StatProfilesAsset _asset;
 
@@ -37,86 +27,24 @@ namespace LordBreakerX.Stats
         {
             System.Type sceneViewType = typeof(SceneView);
             StatsEditorWindow window = GetWindow<StatsEditorWindow>(sceneViewType);
-            window.titleContent = new UnityEngine.GUIContent(namePrefix + WINDOW_TITLE);
+            window.titleContent = new UnityEngine.GUIContent(namePrefix + " Stats Editor");
             window._asset = assetToEdit;
-
-            if (window.CurrentProfilePanel != null)
-                window.CurrentProfilePanel.Reset();
-
-            if (window.CurrentStatsPanel != null)
-                window.CurrentStatsPanel.Reset();
-
-            if (window.CurrentPropertiesPanel != null)
-                window.CurrentPropertiesPanel.Reset();
-
-            string path = AssetDatabase.GetAssetPath(window._asset);
-            EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
-        }
-
-        private void OnEnable()
-        {
-            string path = EditorPrefs.GetString(EDITOR_SAVE_PATH, null);
-            if (!string.IsNullOrEmpty(path))
-            {
-                _asset = AssetDatabase.LoadAssetAtPath<StatProfilesAsset>(path);
-            }
-        }
-
-        private void OnDisable()
-        {
-            string path = AssetDatabase.GetAssetPath(_asset);
-            EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
         }
 
         private void CreateGUI()
         {
-            VisualElement root = rootVisualElement;
+            VisualElement ui = _editorUI.Instantiate();
+            ui.style.flexGrow = 1;
 
-            AddStyleSheets(root);
+            ui.styleSheets.Add(_editorStyles);
 
-            CurrentToolbar = new StatsEditorToolbar();
-
-            CurrentProfilePanel = new StatProfilePanel(STAGE_PANEL_HEADER, this);
-            CurrentStatsPanel = new StatsPanel(STATS_PANEL_HEADER, this);
-            CurrentPropertiesPanel = new PropertiesPanel(PROPERTIES_PANEL_HEADER, this);
-
-            VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, CurrentPropertiesPanel);
-
-            root.Add(CurrentToolbar);
-            root.Add(splitView);
-
-            if (Asset.Profiles.Count > 0) 
-                CurrentProfilePanel.ProfilesView.SetSelection(0);
-
-            if (CurrentStatsPanel.CurrentProfile != null)
+            ui.schedule.Execute(() =>
             {
-                if (CurrentStatsPanel.CurrentProfile.Stats.Count > 0)
-                {
-                    CurrentStatsPanel.StatsListView.SetSelection(0);
-                }
-            }
-        }
+                ui.Q<TwoPaneSplitView>("first-split").fixedPaneInitialDimension = 200;
+                ui.Q<TwoPaneSplitView>("second-split").fixedPaneInitialDimension = 200;
+            });
 
-        private void AddStyleSheets(VisualElement root)
-        {
-            StyleSheet editorStyles = AssetDatabase.LoadAssetAtPath<StyleSheet>(EDITOR_STYLE);
-            root.styleSheets.Add(editorStyles);
-        }
-
-        private VisualElement CreateSplitView(VisualElement stage, VisualElement stats, VisualElement properties)
-        {
-            var mainSplit = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
-            var secondSplit = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
-
-            secondSplit.Add(stats);
-            secondSplit.Add(properties);
-
-            mainSplit.Add(stage);
-            mainSplit.Add(secondSplit);
-
-            mainSplit.style.flexGrow = 1;
-
-            return mainSplit;
+            rootVisualElement.Add(ui);
         }
     }
 }
