@@ -34,6 +34,8 @@ namespace LordBreakerX.Stats
 
             string path = AssetDatabase.GetAssetPath(window._asset);
             EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
+
+            window.UpdatePanels();
         }
 
         private void OnEnable()

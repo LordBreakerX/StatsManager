@@ -16,17 +16,27 @@ namespace LordBreakerX.Stats
 
         public override void UpdatePanel()
         {
-            CurrentListView.itemsSource = GetItemsSource();
-            CurrentListView.Rebuild();
 
-            if (ParentWindow.CurrentProfilePanel.SelectedItem != null)
+            StatProfile profile = ParentWindow.CurrentProfilePanel.SelectedItem;
+
+            if (profile != null)
             {
+                if (!profile.Stats.Contains(SelectedItem))
+                {
+                    CurrentListView.selectedIndex = -1;
+                    SelectedItem = null;
+                }
                 CreateButton.SetEnabled(true);
             }
             else
             {
+                SelectedItem = null;
+                CurrentListView.selectedIndex = -1;
                 CreateButton.SetEnabled(false);
             }
+
+            CurrentListView.itemsSource = GetItemsSource();
+            CurrentListView.Rebuild();
         }
 
         protected override List<Stat> GetItemsSource()

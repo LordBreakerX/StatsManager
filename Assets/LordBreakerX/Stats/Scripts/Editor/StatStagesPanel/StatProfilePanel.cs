@@ -18,6 +18,11 @@ namespace LordBreakerX.Stats
 
         public override void UpdatePanel()
         {
+            if (ParentWindow.Asset.Profiles.Count == 0) 
+            {
+                SelectedItem = null;
+            }
+
             CurrentListView.itemsSource = GetItemsSource();
             CurrentListView.Rebuild();
         }

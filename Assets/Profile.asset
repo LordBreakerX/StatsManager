@@ -17,69 +17,25 @@ MonoBehaviour:
     _type: 1
     _baseValue: 20
     _modifiers:
-    - rid: 2787459373270564928
-    - rid: 2787459373270564929
-    - rid: 2787459373270564930
-    - rid: 2787459373270564931
-    - rid: 2787459373270564932
-    - rid: 2787459373270564933
-    - rid: 2787459373270564934
-    - rid: 2787459373270564935
-    - rid: 2787459373270564936
-    - rid: 2787459373270564937
+    - rid: 2787459413638381630
+    - rid: 2787459413638381631
   - _id: Stamina
+    _type: 1
+    _baseValue: 0
+    _modifiers: []
+  - _id: Hunger
     _type: 1
     _baseValue: 0
     _modifiers: []
   references:
     version: 2
     RefIds:
-    - rid: 2787459373270564928
+    - rid: 2787459413638381630
       type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
       data:
-        _min: -5
-        _max: 4.95
-    - rid: 2787459373270564929
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564930
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564931
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564932
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564933
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564934
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564935
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564936
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 0
-        _max: 0
-    - rid: 2787459373270564937
+        _min: 5
+        _max: 10
+    - rid: 2787459413638381631
       type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
       data:
         _min: 0

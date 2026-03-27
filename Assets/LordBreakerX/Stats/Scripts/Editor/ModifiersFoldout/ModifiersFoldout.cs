@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -69,15 +70,75 @@ namespace LordBreakerX.Stats
 
             SerializedProperty currentModifierProperty = modifiersProperty.GetArrayElementAtIndex(index);
 
-            PropertyField field = new PropertyField(currentModifierProperty, modifierType.Name);
+            string modifieirName = modifierType.Name;
+
+            CustomStatModifierAttribute attribute = modifierType.GetCustomAttribute<CustomStatModifierAttribute>();
+
+            if (attribute != null)
+            {
+                modifieirName = attribute.DisplayName;
+            }
+
+            PropertyField field = new PropertyField(currentModifierProperty, modifieirName);
             field.RegisterCallback<ContextualMenuPopulateEvent>(evt =>
             {
                 evt.menu.MenuItems().Clear();
+
+                evt.menu.AppendAction("Delete Modifier", (_) =>
+                {
+                    _parentPanel.CurrentStat.RemoveModifier(index);
+                    _parentPanel.ParentWindow.UpdatePanels();
+                });
             });
 
             element.Add(field);
 
             element.Bind(serializedProfile);
+
+            Toggle toggle = field.Q<Toggle>();
+
+            VisualElement spacer = new VisualElement();
+            spacer.style.flexGrow = 1;
+            toggle.Add(spacer);
+
+            Button shiftUp = new Button(() =>
+            {
+                if (index > 0)
+                {
+                    _parentPanel.CurrentStat.RemoveModifier(index);
+                    _parentPanel.CurrentStat.InsertModifier(currentModifier, index - 1);
+                    _parentPanel.ParentWindow.UpdatePanels();
+                }
+            });
+            shiftUp.text = "▲";
+            shiftUp.AddToClassList("shift-button");
+
+            toggle.Add(shiftUp);
+
+            Button shiftDown = new Button(() =>
+            {
+                if (_parentPanel.CurrentStat.ModifierCount - 1 > index)
+                {
+                    _parentPanel.CurrentStat.RemoveModifier(index);
+                    _parentPanel.CurrentStat.InsertModifier(currentModifier, index + 1);
+                    _parentPanel.ParentWindow.UpdatePanels();
+                }
+            });
+            shiftDown.text = "▼";
+            shiftDown.AddToClassList("shift-button");
+
+            toggle.Add(shiftDown);
+
+            Button removeButton = new Button(() =>
+            {
+                _parentPanel.CurrentStat.RemoveModifier(index);
+                _parentPanel.ParentWindow.UpdatePanels();
+            });
+            removeButton.text = "-";
+            removeButton.AddToClassList("plus-button");
+
+            toggle.Add(removeButton);
+            
         }
 
         private void RemoveStatModifier(int modifierIndex)

@@ -12,7 +12,7 @@ namespace LordBreakerX.Stats
 
         public abstract string AddElementTitle { get; }
 
-        public TElement SelectedItem { get; private set; }
+        public TElement SelectedItem { get; set; }
 
         public Button CreateButton { get => _createButton; }
 
@@ -29,6 +29,7 @@ namespace LordBreakerX.Stats
             _createButton = new Button(CreateElement);
             _createButton.text = "+";
             _createButton.AddToClassList("plus-button");
+            AddToHeader(_createButton);
 
             // extend the panel with a list view
             CurrentListView = new ListView(itemsSource);

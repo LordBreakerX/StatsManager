@@ -19,6 +19,8 @@ namespace LordBreakerX.Stats
         [SerializeReference]
         private List<StatModifier> _modifiers = new List<StatModifier>();
 
+        public int ModifierCount {  get { return _modifiers.Count; } }
+
         public Stat()
         {
 
@@ -78,6 +80,14 @@ namespace LordBreakerX.Stats
             {
                 _modifiers.Add(modifier);
             } 
+        }
+
+        public void InsertModifier(StatModifier modifier, int index)
+        {
+            if (modifier != null && index <= _modifiers.Count)
+            {
+                _modifiers.Insert(index, modifier);
+            }
         }
 
         public void RemoveModifier(int index)

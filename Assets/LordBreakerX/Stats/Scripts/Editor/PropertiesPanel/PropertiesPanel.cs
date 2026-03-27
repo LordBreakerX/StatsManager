@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -28,6 +29,7 @@ namespace LordBreakerX.Stats
             spacer.style.minHeight = 15;
 
             _modifiiersFoldout = new ModifiersFoldout(this);
+
             AddToPanel(generalProperties);
             AddToPanel(spacer);
             AddToPanel(_modifiiersFoldout);
