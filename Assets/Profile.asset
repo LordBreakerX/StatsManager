@@ -17,8 +17,8 @@ MonoBehaviour:
     _type: 1
     _baseValue: 20
     _modifiers:
-    - rid: 2787459413638381630
-    - rid: 2787459413638381631
+    - rid: 2787459413638381634
+    - rid: 2787459413638381633
   - _id: Stamina
     _type: 1
     _baseValue: 0
@@ -30,16 +30,16 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2787459413638381630
-      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
-      data:
-        _min: 5
-        _max: 10
-    - rid: 2787459413638381631
+    - rid: 2787459413638381633
       type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
       data:
         _min: 0
         _max: 0
+    - rid: 2787459413638381634
+      type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: LordBreakerX.Stats}
+      data:
+        _min: 5
+        _max: 10
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

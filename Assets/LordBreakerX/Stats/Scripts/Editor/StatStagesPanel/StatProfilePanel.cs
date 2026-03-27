@@ -18,8 +18,9 @@ namespace LordBreakerX.Stats
 
         public override void UpdatePanel()
         {
-            if (ParentWindow.Asset.Profiles.Count == 0) 
+            if (ParentWindow.Asset.Profiles.Count == 0 || !ParentWindow.Asset.Profiles.Contains(SelectedItem)) 
             {
+                CurrentListView.selectedIndex = -1;
                 SelectedItem = null;
             }
 

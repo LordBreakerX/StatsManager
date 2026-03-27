@@ -120,7 +120,7 @@ namespace LordBreakerX.Stats
                     if (!string.IsNullOrEmpty(path)) 
                     { 
                         ParentWindow.CurrentToolbar.CreateTemplate(Data, path);
-                        ParentWindow.CurrentToolbar.UpdateTemplates();
+                        ParentWindow.CurrentToolbar.UpdateTemplatesMenu();
                     }
                 }
             });
