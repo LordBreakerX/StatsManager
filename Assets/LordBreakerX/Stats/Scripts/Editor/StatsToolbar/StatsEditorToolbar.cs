@@ -82,12 +82,20 @@ namespace LordBreakerX.Stats
 
         private void OnDuplicateTemplate(DropdownMenuAction action)
         {
-            throw new NotImplementedException();
+            if (CurrentTemplate != null)
+            {
+                ProfileTemplateEditorWindow.OpenDuplicatingTemplateWindow(_templateMenu.worldBound, CurrentTemplate);
+                UpdateTemplatesMenu();
+            }
         }
 
         private void OnEditTemplate(DropdownMenuAction action)
         {
-            throw new NotImplementedException();
+            if (CurrentTemplate != null)
+            {
+                ProfileTemplateEditorWindow.OpenEditingTemplateWindow(_templateMenu.worldBound, CurrentTemplate);
+                UpdateTemplatesMenu();
+            }
         }
 
         private void OnAddTemplate(DropdownMenuAction action)

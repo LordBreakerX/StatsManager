@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd028f61c0814404d8c0357adfff5d12, type: 3}
+  m_Name: StatProfile_Template
+  m_EditorClassIdentifier: LordBreakerX.Stats::LordBreakerX.Stats.StatProfileTemplate
+  _stats:
+  - _id: Health
+    _type: 0
+    _baseValue: 100
+    _modifiers: []
+  - _id: Stamina
+    _type: 0
+    _baseValue: 100
+    _modifiers: []
+  - _id: Move Speed
+    _type: 1
+    _baseValue: 5.2
+    _modifiers: []
+  - _id: Hunger
+    _type: 1
+    _baseValue: 10
+    _modifiers: []
+  references:
+    version: 2
+    RefIds: []

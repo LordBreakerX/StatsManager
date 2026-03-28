@@ -49,21 +49,47 @@ namespace LordBreakerX.Stats
             window.ShowModalUtility();
         }
 
-        public static void OpenEditingTemplateWindow(StatProfileTemplate template)
+        public static void OpenEditingTemplateWindow(Rect startingBounds, StatProfileTemplate template)
         {
             ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
             window.titleContent = new GUIContent("Edit Profile Template");
             window._editType = TemplateEditType.Editing;
             window._currentTemplate = template;
+
+            window.minSize = new Vector2(500, 400);
+
+            window.position = new Rect(
+                startingBounds.width,
+                startingBounds.height,
+                window.minSize.x,
+                window.minSize.y
+            );
+
+            window._currentTemplate = template;
+            window._stats = (List<Stat>)template.Stats;
+
             window.ShowModalUtility();
         }
 
-        public static void OpenDuplicatingTemplateWindow(StatProfileTemplate template)
+        public static void OpenDuplicatingTemplateWindow(Rect startingBounds, StatProfileTemplate template)
         {
             ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
             window.titleContent = new GUIContent("Edit Profile Template");
             window._editType = TemplateEditType.Duplicating;
             window._currentTemplate = template;
+
+            window.minSize = new Vector2(500, 400);
+
+            window.position = new Rect(
+                startingBounds.width,
+                startingBounds.height,
+                window.minSize.x,
+                window.minSize.y
+            );
+
+            window._currentTemplate = template;
+            window._stats = (List<Stat>)template.Stats;
+
             window.ShowModalUtility();
         }
 
@@ -150,7 +176,15 @@ namespace LordBreakerX.Stats
                     EditorUtility.SetDirty(template);
                     break;
                 case TemplateEditType.Editing:
-                    break;
+                    if (_currentTemplate != null)
+                    {
+                        _currentTemplate.SetStats(_stats);
+
+                        EditorUtility.SetDirty(_currentTemplate);
+                        AssetDatabase.SaveAssets();
+                        AssetDatabase.Refresh();
+                    }
+                break;
             }
 
             Close();
