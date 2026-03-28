@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+
+    <ui:Template src="EditorPanel.uxml" name="EditorPanel"/>
+
+    <!-- Panels -->
+    <ui:TwoPaneSplitView name="panels" style="flex-grow: 1;">
+        
+        <!-- Stats Panel -->
+        <ui:Instance template="EditorPanel" name="statsPanel" style="min-width: 200; flex-grow: 1;">
+            <ui:AttributeOverrides element-name="headerLabel" text="Stats" />
+            <ui:ListView name="stats-list" fixed-item-height="20" style="flex-grow: 1;" />
+        </ui:Instance>
+
+        <!-- Properties Panel -->
+        <ui:Instance template="EditorPanel" name="propertiesPanel" style="min-width: 200;">
+            <ui:AttributeOverrides element-name="headerLabel" text="Stat Properties" />
+            <!-- Stat General Properties -->
+            <ui:Foldout text="Stat" class="decorated-foldout">
+                <ui:TextField label="Stat ID" name="stat-id" />
+                <ui:EnumField label="Stat Type" name="stat-type" />
+                <ui:FloatField label="Base Value" name="stat-base-value" />
+            </ui:Foldout>
+
+            <ui:VisualElement style="min-height: 15;" />
+
+            <!-- Stat Modifiers -->
+            <ui:Foldout text="Stat Modifiers" class="decorated-foldout" name="modifiers-foldout">
+                <ui:ListView name="stat-modifiers-list" fixed-item-height="20" style="flex-grow: 1;" />
+            </ui:Foldout>
+        </ui:Instance>
+    </ui:TwoPaneSplitView>
+    <!-- Buttons -->
+    <ui:VisualElement style="flex-direction: row; min-height: 35;">
+        <ui:Button name="cancel-button" text="Cancel" style="flex-grow:1;" />
+        <ui:Button name="save-button" text="Save Template" style="flex-grow:1;" />
+    </ui:VisualElement>
+</ui:UXML>

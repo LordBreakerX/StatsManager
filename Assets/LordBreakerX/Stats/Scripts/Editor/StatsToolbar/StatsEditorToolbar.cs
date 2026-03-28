@@ -92,7 +92,8 @@ namespace LordBreakerX.Stats
 
         private void OnAddTemplate(DropdownMenuAction action)
         {
-            throw new NotImplementedException();
+            ProfileTemplateEditorWindow.OpenAddingTemplateWindow(_templateMenu.worldBound);
+            UpdateTemplatesMenu();
         }
 
         private DropdownMenuAction.Status UpdateTemplateActionStatus(DropdownMenuAction action)
