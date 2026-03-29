@@ -1,21 +1,15 @@
 namespace LordBreakerX.Stats
 {
     [System.Serializable]
-    public class StatModifier
+    public abstract class StatModifier
     {
         public StatModifier()
         {
 
         }
 
-        public virtual float Apply(float currentValue, float baseValue)
-        {
-            return currentValue;
-        }
+        public abstract float Apply(float currentValue, float baseValue);
 
-        public virtual StatModifier Copy()
-        {
-            return new StatModifier();
-        }
+        public abstract StatModifier Copy();
     }
 }

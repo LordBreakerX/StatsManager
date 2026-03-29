@@ -68,3 +68,26 @@
 .plus-button:active {
     background-color: transparent;
 }
+
+.shift-button {
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+
+    width: 16px;
+    height: 16px;
+
+    justify-content: center;
+    align-items: center;
+
+    -unity-text-align: middle-center;
+    font-size: 10px;
+}
+
+.shift-button:hover {
+    background-color: transparent;
+}
+
+.shift-button:active {
+    background-color: transparent;
+}

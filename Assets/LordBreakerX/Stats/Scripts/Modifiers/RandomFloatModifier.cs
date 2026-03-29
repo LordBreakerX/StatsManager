@@ -20,5 +20,13 @@ namespace LordBreakerX.Stats
             float currentMax = currentValue + _max;
             return Random.Range(currentMin, currentMax);
         }
+
+        public override StatModifier Copy()
+        {
+            RandomFloatModifier modifier = new RandomFloatModifier();
+            modifier._max = _max;
+            modifier._min = _min;
+            return modifier;
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace LordBreakerX.Stats
 
             Stat stat = template.Stats[arg2];
 
-            label.text = stat.GetId() + " <color=orange>(" + stat.ValueType.ToString() + ")</color>"; 
+            label.text = stat.GetId() + " <color=orange>(" + stat.ValueType.ToString() + ")</color>";
         }
     }
 }

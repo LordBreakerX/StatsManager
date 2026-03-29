@@ -14,7 +14,7 @@ namespace LordBreakerX.Stats
         {
             _stats = new List<Stat>();
 
-            foreach (Stat stat in stats) 
+            foreach (Stat stat in stats)
             {
                 _stats.Add(new Stat(stat));
             }

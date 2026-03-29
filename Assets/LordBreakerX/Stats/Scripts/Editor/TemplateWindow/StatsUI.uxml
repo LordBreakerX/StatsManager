@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xmlns:stat="LordBreakerX.Stats"
+    xsi:noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd"
+>
+    <ui:Template src="EditorPanel.uxml" name="EditorPanel"/>
+
+    <ui:TwoPaneSplitView name="panels" style="flex-grow: 1;">
+        <!-- Stats Panel -->
+        <ui:Instance template="EditorPanel" name="statsPanel" style="min-width: 200; flex-grow: 1;">
+            <ui:AttributeOverrides element-name="headerLabel" text="Stats" />
+            <ui:ListView name="stats-list" fixed-item-height="20" style="flex-grow: 1;" />
+        </ui:Instance>
+
+        <!-- Properties Panel -->
+        <ui:Instance template="EditorPanel" name="propertiesPanel" style="min-width: 200;">
+            <ui:AttributeOverrides element-name="headerLabel" text="Stat Properties" />
+            <!-- Stat General Properties -->
+            <stat:StatProperties />
+        </ui:Instance>
+    </ui:TwoPaneSplitView>
+
+</ui:UXML>

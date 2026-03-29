@@ -128,6 +128,9 @@ namespace LordBreakerX.Stats
                 evt.menu.AppendAction("Delete Modifier", (_) =>
                 {
                     _currentStat.RemoveModifier(index);
+
+                    UpdateSerilized();
+
                     _modifiersView.Rebuild();
                     _onChanged?.Invoke();
                 });
@@ -149,6 +152,9 @@ namespace LordBreakerX.Stats
                 {
                     _currentStat.RemoveModifier(index);
                     _currentStat.InsertModifier(currentModifier, index - 1);
+
+                    UpdateSerilized();
+
                     _modifiersView.Rebuild();
                     _onChanged?.Invoke();
                 }
@@ -164,6 +170,9 @@ namespace LordBreakerX.Stats
                 {
                     _currentStat.RemoveModifier(index);
                     _currentStat.InsertModifier(currentModifier, index + 1);
+
+                    UpdateSerilized();
+
                     _modifiersView.Rebuild();
                     _onChanged?.Invoke();
                 }
@@ -176,6 +185,9 @@ namespace LordBreakerX.Stats
             Button removeButton = new Button(() =>
             {
                 _currentStat.RemoveModifier(index);
+
+                UpdateSerilized();
+
                 _modifiersView.Rebuild();
                 _onChanged?.Invoke();
             });
@@ -183,8 +195,6 @@ namespace LordBreakerX.Stats
             removeButton.AddToClassList("plus-button");
 
             toggle.Add(removeButton);
-
-            _statProperty.serializedObject.ApplyModifiedProperties();
         }
 
         private void UnbindModifier(VisualElement element, int index)
@@ -215,8 +225,13 @@ namespace LordBreakerX.Stats
                         if (modifier != null)
                         {
                             _currentStat.AddModifier(modifier);
+
+                            UpdateSerilized();
+
+
                             _modifiersView.Rebuild();
                             _onChanged?.Invoke();
+
                         }
                     });
                 }
@@ -227,16 +242,20 @@ namespace LordBreakerX.Stats
 
         // other methods
 
-        public void SetStat(Stat stat)
+        public void SetStat(Stat stat, SerializedProperty property)
         {
             _currentStat = stat;
+            _statProperty = property;
 
-            if (_currentStat != null)
+            if (_currentStat != null && _statProperty != null)
             {
                 _idField.value = _currentStat.GetId();
                 _floatValueField.value = _currentStat.BaseValue;
                 _statTypeField.value = _currentStat.ValueType;
                 _modifiersView.itemsSource = (IList)_currentStat.Modifiers;
+
+                UpdateSerilized();
+
                 _modifiersView.Rebuild();
                 SetEnabled(true);
             }
@@ -246,15 +265,18 @@ namespace LordBreakerX.Stats
             }
         }
 
-        public void SetStatProperty(SerializedProperty statProperty)
-        {
-            _statProperty = statProperty;
-            _statProperty.serializedObject.Update();
-        }
-
         public void Init(Action onChanged)
         {
             _onChanged = onChanged;
+        }
+
+        public void UpdateSerilized()
+        {
+            if (_statProperty != null)
+            {
+                _statProperty.serializedObject.Update();
+                _statProperty.serializedObject.ApplyModifiedProperties();
+            }
         }
     }
 }

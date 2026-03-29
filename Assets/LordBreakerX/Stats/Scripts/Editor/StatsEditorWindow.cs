@@ -53,6 +53,14 @@ namespace LordBreakerX.Stats
             EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
         }
 
+        private void Update()
+        {
+            if (Asset == null)
+            {
+                Close();
+            }
+        }
+
         private void CreateGUI()
         {
             VisualElement root = rootVisualElement;

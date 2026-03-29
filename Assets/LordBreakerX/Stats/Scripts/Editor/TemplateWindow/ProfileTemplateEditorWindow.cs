@@ -16,6 +16,7 @@ namespace LordBreakerX.Stats
         private TemplateEditType _editType;
 
         [SerializeField]
+        [SerializeReference]
         private List<Stat> _stats = new List<Stat>();
 
         private Stat _currentStat;
@@ -49,7 +50,6 @@ namespace LordBreakerX.Stats
             ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
             window.titleContent = new GUIContent("Edit Profile Template");
             window._editType = TemplateEditType.Editing;
-            window._currentTemplate = template;
 
             window.minSize = new Vector2(500, 400);
 
@@ -61,7 +61,7 @@ namespace LordBreakerX.Stats
             );
 
             window._currentTemplate = template;
-            window._stats = (List<Stat>)template.Stats;
+            window._stats = template.CopyStats();
 
             window.ShowModalUtility();
         }
@@ -71,7 +71,6 @@ namespace LordBreakerX.Stats
             ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
             window.titleContent = new GUIContent("Edit Profile Template");
             window._editType = TemplateEditType.Duplicating;
-            window._currentTemplate = template;
 
             window.minSize = new Vector2(500, 400);
 
@@ -83,7 +82,7 @@ namespace LordBreakerX.Stats
             );
 
             window._currentTemplate = template;
-            window._stats = (List<Stat>)template.Stats;
+            window._stats = template.CopyStats();
 
             window.ShowModalUtility();
         }
@@ -142,6 +141,7 @@ namespace LordBreakerX.Stats
                 case TemplateEditType.Adding:
                     StatProfileTemplate template = ScriptableObject.CreateInstance<StatProfileTemplate>();
 
+                    _statFoldout.UpdateSerilized();
                     template.SetStats(_stats);
 
                     string createPath = EditorUtility.SaveFilePanel("Save Profile Template", "Assets", "StatProfile_Template", "asset");
@@ -158,6 +158,7 @@ namespace LordBreakerX.Stats
                 case TemplateEditType.Editing:
                     if (_currentTemplate != null)
                     {
+                        _statFoldout.UpdateSerilized();
                         _currentTemplate.SetStats(_stats);
 
                         EditorUtility.SetDirty(_currentTemplate);
@@ -179,9 +180,8 @@ namespace LordBreakerX.Stats
                 SerializedObject serializedWindow = new SerializedObject(this);
                 SerializedProperty statsProperty = serializedWindow.FindProperty("_stats");
                 SerializedProperty statProperty = statsProperty.GetArrayElementAtIndex(_stats.IndexOf(_currentStat));
-                _statFoldout.SetStatProperty(statProperty);
 
-                _statFoldout.SetStat(_currentStat);
+                _statFoldout.SetStat(_currentStat, statProperty);
             }
         }
 
