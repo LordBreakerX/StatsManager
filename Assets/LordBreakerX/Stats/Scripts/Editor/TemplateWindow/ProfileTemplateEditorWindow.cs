@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -17,6 +15,7 @@ namespace LordBreakerX.Stats
 
         private TemplateEditType _editType;
 
+        [SerializeField]
         private List<Stat> _stats = new List<Stat>();
 
         private Stat _currentStat;
@@ -25,11 +24,7 @@ namespace LordBreakerX.Stats
 
         private ListView _statsListView;
 
-        private TextField _statIdField;
-
-        private EnumField _statTypeField;
-
-        private FloatField _statFloatValueField;
+        private StatProperties _statFoldout;
 
         public static void OpenAddingTemplateWindow(Rect startingBounds)
         {
@@ -104,6 +99,13 @@ namespace LordBreakerX.Stats
 
             InitilizeGUI(ui);
 
+            _statFoldout = ui.Q<StatProperties>();
+            _statFoldout.Init(() =>
+            {
+                _statsListView.Rebuild();
+            });
+            _statFoldout.SetEnabled(false);
+
             // add UI to the root element
             rootVisualElement.Add(ui);
         }
@@ -113,22 +115,6 @@ namespace LordBreakerX.Stats
             TwoPaneSplitView splitView = ui.Q<TwoPaneSplitView>();
 
             splitView.fixedPaneInitialDimension = 200;
-
-            _statTypeField = ui.Q<EnumField>();
-            _statTypeField.Init(StatType.Float);
-            _statTypeField.RegisterValueChangedCallback(OnStatTypeChanged);
-
-            Foldout modifiersFoldout = ui.Q<Foldout>("modifiers-foldout");
-            Toggle toggle = modifiersFoldout.Q<Toggle>();
-
-            VisualElement spacer = new VisualElement();
-            spacer.style.flexGrow = 1;
-            toggle.Add(spacer);
-
-            Button addModifierButton = new Button();
-            addModifierButton.text = "+";
-            addModifierButton.AddToClassList("plus-button");
-            toggle.Add(addModifierButton);
 
             _statsListView = ui.Q<ListView>("stats-list");
             _statsListView.itemsSource = _stats;
@@ -146,12 +132,6 @@ namespace LordBreakerX.Stats
 
             Button addStatButton = ui.Q<VisualElement>("statsPanel").Q<Button>("headerButton");
             addStatButton.clicked += AddStat;
-
-            _statIdField = ui.Q<TextField>("stat-id");
-            _statIdField.RegisterValueChangedCallback(OnStatIdChanged);
-
-            _statFloatValueField = ui.Q<FloatField>("stat-base-value");
-            _statFloatValueField.RegisterValueChangedCallback(OnStatValueChanged);
         }
 
         private void OnSave()
@@ -190,42 +170,18 @@ namespace LordBreakerX.Stats
             Close();
         }
 
-        private void OnStatValueChanged(ChangeEvent<float> evt)
-        {
-            if (_currentStat != null)
-            {
-                _currentStat.BaseValue = evt.newValue;
-                _statsListView.Rebuild();
-            }
-        }
-
-        private void OnStatTypeChanged(ChangeEvent<Enum> evt)
-        {
-            if (_currentStat != null)
-            {
-                _currentStat.ValueType = (StatType)evt.newValue;
-                _statsListView.Rebuild();
-            }
-        }
-
-        private void OnStatIdChanged(ChangeEvent<string> evt)
-        {
-            if (_currentStat != null)
-            {
-                _currentStat.SetId(evt.newValue);
-                _statsListView.Rebuild();
-            }
-        }
-
         private void OnStatChanged(IEnumerable<object> obj)
         {
             if (_statsListView.selectedItem is Stat selectedStat)
             {
                 _currentStat = selectedStat;
 
-                _statIdField.value = selectedStat.GetId();
-                _statFloatValueField.value = selectedStat.BaseValue;
-                _statTypeField.value = selectedStat.ValueType;
+                SerializedObject serializedWindow = new SerializedObject(this);
+                SerializedProperty statsProperty = serializedWindow.FindProperty("_stats");
+                SerializedProperty statProperty = statsProperty.GetArrayElementAtIndex(_stats.IndexOf(_currentStat));
+                _statFoldout.SetStatProperty(statProperty);
+
+                _statFoldout.SetStat(_currentStat);
             }
         }
 
