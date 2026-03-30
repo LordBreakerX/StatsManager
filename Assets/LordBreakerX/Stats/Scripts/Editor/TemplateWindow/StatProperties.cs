@@ -101,8 +101,6 @@ namespace LordBreakerX.Stats
 
             StatModifier currentModifier = _currentStat.Modifiers[index];
 
-            Debug.Log($"modifiers: {_currentStat.Modifiers.Count}");
-
             Type modifierType = currentModifier.GetType();
 
             _statProperty.serializedObject.Update();

@@ -9,23 +9,8 @@
 
     <ui:Template src="EditorPanel.uxml" name="EditorPanel"/>
 
-    <!-- Panels -->
-    <ui:TwoPaneSplitView name="panels" style="flex-grow: 1;">
-        
-        <!-- Stats Panel -->
-        <ui:Instance template="EditorPanel" name="statsPanel" style="min-width: 200; flex-grow: 1;">
-            <ui:AttributeOverrides element-name="headerLabel" text="Stats" />
-            <ui:ListView name="stats-list" fixed-item-height="20" style="flex-grow: 1;" />
-        </ui:Instance>
+    <stat:StatsElement />
 
-        <!-- Properties Panel -->
-        <ui:Instance template="EditorPanel" name="propertiesPanel" style="min-width: 200;">
-            <ui:AttributeOverrides element-name="headerLabel" text="Stat Properties" />
-            <!-- Stat General Properties -->
-            <stat:StatProperties />
-        </ui:Instance>
-    </ui:TwoPaneSplitView>
-    <!-- Buttons -->
     <ui:VisualElement style="flex-direction: row; min-height: 35;">
         <ui:Button name="cancel-button" text="Cancel" style="flex-grow:1;" />
         <ui:Button name="save-button" text="Save Template" style="flex-grow:1;" />

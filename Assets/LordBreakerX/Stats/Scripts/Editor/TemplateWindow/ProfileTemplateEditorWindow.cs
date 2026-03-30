@@ -15,17 +15,9 @@ namespace LordBreakerX.Stats
 
         private TemplateEditType _editType;
 
-        [SerializeField]
-        [SerializeReference]
-        private List<Stat> _stats = new List<Stat>();
-
-        private Stat _currentStat;
-
         private StatProfileTemplate _currentTemplate;
 
-        private ListView _statsListView;
-
-        private StatProperties _statFoldout;
+        private StatsElement _statsElement;
 
         public static void OpenAddingTemplateWindow(Rect startingBounds)
         {
@@ -41,6 +33,8 @@ namespace LordBreakerX.Stats
                 window.minSize.x, 
                 window.minSize.y
             );
+
+            window._currentTemplate = ScriptableObject.CreateInstance<StatProfileTemplate>();
 
             window.ShowModalUtility();
         }
@@ -61,7 +55,6 @@ namespace LordBreakerX.Stats
             );
 
             window._currentTemplate = template;
-            window._stats = template.CopyStats();
 
             window.ShowModalUtility();
         }
@@ -69,7 +62,7 @@ namespace LordBreakerX.Stats
         public static void OpenDuplicatingTemplateWindow(Rect startingBounds, StatProfileTemplate template)
         {
             ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
-            window.titleContent = new GUIContent("Edit Profile Template");
+            window.titleContent = new GUIContent("Duplicate Profile Template");
             window._editType = TemplateEditType.Duplicating;
 
             window.minSize = new Vector2(500, 400);
@@ -81,8 +74,36 @@ namespace LordBreakerX.Stats
                 window.minSize.y
             );
 
-            window._currentTemplate = template;
-            window._stats = template.CopyStats();
+            window._currentTemplate = ScriptableObject.CreateInstance<StatProfileTemplate>();
+            window._currentTemplate.SetStats(template.CopyStats());
+
+            window.ShowModalUtility();
+        }
+
+        public static void OpenCreateFromProfile(Rect startingBounds, StatProfile profile)
+        {
+            List<Stat> stats = new List<Stat>();
+
+            foreach (Stat stat in profile.Stats) 
+            {
+                stats.Add(new Stat(stat));
+            }
+
+            ProfileTemplateEditorWindow window = ScriptableObject.CreateInstance<ProfileTemplateEditorWindow>();
+            window.titleContent = new GUIContent("Create Profile Template");
+            window._editType = TemplateEditType.Adding;
+
+            window.minSize = new Vector2(500, 400);
+
+            window.position = new Rect(
+                startingBounds.width,
+                startingBounds.height,
+                window.minSize.x,
+                window.minSize.y
+            );
+
+            window._currentTemplate = ScriptableObject.CreateInstance<StatProfileTemplate>();
+            window._currentTemplate.SetStats(stats);
 
             window.ShowModalUtility();
         }
@@ -98,12 +119,13 @@ namespace LordBreakerX.Stats
 
             InitilizeGUI(ui);
 
-            _statFoldout = ui.Q<StatProperties>();
-            _statFoldout.Init(() =>
+            _statsElement = ui.Q<StatsElement>();
+            _statsElement.Init(_currentTemplate, () => 
             {
-                _statsListView.Rebuild();
+                
             });
-            _statFoldout.SetEnabled(false);
+
+            _statsElement.SetSource((System.Collections.IList)_currentTemplate.Stats);
 
             // add UI to the root element
             rootVisualElement.Add(ui);
@@ -112,108 +134,44 @@ namespace LordBreakerX.Stats
         private void InitilizeGUI(VisualElement ui)
         {
             TwoPaneSplitView splitView = ui.Q<TwoPaneSplitView>();
-
             splitView.fixedPaneInitialDimension = 200;
-
-            _statsListView = ui.Q<ListView>("stats-list");
-            _statsListView.itemsSource = _stats;
-            _statsListView.makeItem = MakeStatsItem;
-            _statsListView.bindItem = BindStatsItem;
-            _statsListView.reorderable = true;
-            _statsListView.selectionChanged += OnStatChanged;
-            _statsListView.Rebuild();
 
             Button cancelButton = ui.Q<Button>("cancel-button");
             cancelButton.clicked += OnCancel;
 
             Button saveButton = ui.Q<Button>("save-button");
             saveButton.clicked += OnSave;
-
-            Button addStatButton = ui.Q<VisualElement>("statsPanel").Q<Button>("headerButton");
-            addStatButton.clicked += AddStat;
         }
 
         private void OnSave()
         {
-            switch(_editType)
+            if (_editType != TemplateEditType.Editing)
             {
-                case TemplateEditType.Duplicating:
-                case TemplateEditType.Adding:
-                    StatProfileTemplate template = ScriptableObject.CreateInstance<StatProfileTemplate>();
+                string createPath = EditorUtility.SaveFilePanel("Save Profile Template", "Assets", "StatProfile_Template", "asset");
 
-                    _statFoldout.UpdateSerilized();
-                    template.SetStats(_stats);
-
-                    string createPath = EditorUtility.SaveFilePanel("Save Profile Template", "Assets", "StatProfile_Template", "asset");
-
+                if (!string.IsNullOrEmpty(createPath))
+                {
                     createPath = "Assets" + createPath.Substring(Application.dataPath.Length);
 
-                    AssetDatabase.CreateAsset(template, createPath);
+                    AssetDatabase.CreateAsset(_currentTemplate, createPath);
 
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
-
-                    EditorUtility.SetDirty(template);
-                    break;
-                case TemplateEditType.Editing:
-                    if (_currentTemplate != null)
-                    {
-                        _statFoldout.UpdateSerilized();
-                        _currentTemplate.SetStats(_stats);
-
-                        EditorUtility.SetDirty(_currentTemplate);
-                        AssetDatabase.SaveAssets();
-                        AssetDatabase.Refresh();
-                    }
-                break;
+                }
             }
 
+            EditorUtility.SetDirty(_currentTemplate);
             Close();
-        }
-
-        private void OnStatChanged(IEnumerable<object> obj)
-        {
-            if (_statsListView.selectedItem is Stat selectedStat)
-            {
-                _currentStat = selectedStat;
-
-                SerializedObject serializedWindow = new SerializedObject(this);
-                SerializedProperty statsProperty = serializedWindow.FindProperty("_stats");
-                SerializedProperty statProperty = statsProperty.GetArrayElementAtIndex(_stats.IndexOf(_currentStat));
-
-                _statFoldout.SetStat(_currentStat, statProperty);
-            }
-        }
-
-        private void AddStat()
-        {
-            Stat stat = new Stat();
-            stat.SetId($"Stat {_stats.Count}");
-            _stats.Add(stat);
-            _statsListView.Rebuild();
         }
 
         private void OnCancel()
         {
-            Close();
-        }
-
-        private VisualElement MakeStatsItem()
-        {
-            Label label = new Label();
-            label.style.unityTextAlign = TextAnchor.MiddleLeft;
-            label.style.paddingLeft = 10;
-            return label;
-        }
-
-        private void BindStatsItem(VisualElement element, int index)
-        {
-            Stat stat = _stats[index];
-
-            if (element is Label label)
+            if (!AssetDatabase.Contains(_currentTemplate) && _currentTemplate != null)
             {
-                label.text = stat.GetId();
+                DestroyImmediate(_currentTemplate, true);
             }
+
+            Close();
         }
     }
 }
