@@ -1,0 +1,14 @@
+{
+    "name": "Nathanielh2013.Lordbreakerxsstatmanager",
+    "rootNamespace": "LordBreakerX.Stats",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
