@@ -36,6 +36,7 @@ namespace LordBreakerX.Stats
                 }
             }
         }
+
         public void OnStatUpdate(StatContext context)
         {
             if (context.statProfile != _currentProfile) return;

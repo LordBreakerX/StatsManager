@@ -11,7 +11,7 @@ namespace LordBreakerX.Stats
         [OnOpenAsset]
         public static bool OnOpenAsset(int instanceID, int line)
         {
-            Object obj = EditorUtility.EntityIdToObject(instanceID);
+            Object obj = EditorUtility.InstanceIDToObject(instanceID);
 
             if (obj is StatProfilesAsset asset)
             {
