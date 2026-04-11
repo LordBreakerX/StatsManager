@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace LordBreakerX.Stats
 {
@@ -13,7 +16,9 @@ namespace LordBreakerX.Stats
         #region Variables
         private static StatManager _instance;
 
-        private UnityEvent<StatContext> _onStatUpdate;
+        private UnityEvent<StatContext> _onStatUpdate = new UnityEvent<StatContext>();
+
+        private List<IStatHandler> _statHandlers = new List<IStatHandler>();
 
         #endregion
 
@@ -33,6 +38,7 @@ namespace LordBreakerX.Stats
                 return _instance;
             }
         }
+        #endregion
 
         private void OnEnable()
         {
@@ -44,20 +50,45 @@ namespace LordBreakerX.Stats
             else if (_instance != this)
             {
 #if UNITY_EDITOR
-                Debug.LogWarning("");
+                Debug.LogWarning("Only one Stat Manager is allowed per scene!");
 #endif
                 gameObject.SetActive(false);
             }
-        }
 
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
         private void OnDisable()
         {
             if (_instance == this)
             {
                 _instance = null;
             }
+
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
-        #endregion
+        private void OnSceneLoaded(Scene sceneLoaded, LoadSceneMode loadMode)
+        {
+            _statHandlers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                .OfType<IStatHandler>()
+                .ToList();
+
+            foreach(IStatHandler handler in _statHandlers)
+            {
+                RegisterListener(handler.OnStatUpdate);
+            }
+        }
+
+        private void OnSceneUnloaded(Scene sceneUnloaded)
+        {
+            foreach (IStatHandler handler in _statHandlers)
+            {
+                UnregisterListener(handler.OnStatUpdate);
+            }
+
+            _statHandlers.Clear();
+        }
 
         #region Register Events
         public static void RegisterListener(UnityAction<StatContext> statUpdateCallback)

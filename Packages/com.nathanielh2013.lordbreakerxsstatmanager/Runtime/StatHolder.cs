@@ -25,6 +25,7 @@ namespace LordBreakerX.Stats
 
         private Dictionary<string, UnityEvent<StatContext>> _eventRegistry = new Dictionary<string, UnityEvent<StatContext>>();
 
+        public List<StatProfileEvent> StatsEvents { get => _statsEvents; set => _statsEvents = value; }
         private void Awake()
         {
             foreach (StatProfileEvent profileEvent in _statsEvents) 
@@ -35,17 +36,6 @@ namespace LordBreakerX.Stats
                 }
             }
         }
-
-        private void OnEnable()
-        {
-            StatManager.RegisterListener(OnStatUpdate);
-        }
-
-        private void OnDisable()
-        {
-            StatManager.UnregisterListener(OnStatUpdate);
-        }
-
         public void OnStatUpdate(StatContext context)
         {
             if (context.statProfile != _currentProfile) return;
