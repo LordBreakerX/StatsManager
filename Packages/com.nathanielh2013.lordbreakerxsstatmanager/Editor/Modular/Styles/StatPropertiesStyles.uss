@@ -1,0 +1,7 @@
+#propertiesPanel #headerButton {
+    display: none;
+}
+
+.decorated-foldout > Toggle {
+    background-color: #292929;
+}

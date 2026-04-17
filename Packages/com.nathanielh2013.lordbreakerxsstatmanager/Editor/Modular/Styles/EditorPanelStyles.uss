@@ -1,0 +1,44 @@
+.panel-header {
+	background-color: var(--unity-colors-toolbar-background);
+    border-bottom-color: var(--unity-colors-toolbar-border);
+    flex-direction: row;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 5px;
+    padding-right: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-bottom-width: 1px;
+    height: 28px;
+    min-height: 28px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    align-items: center;
+    justify-content: flex-start;
+    -unity-text-align: middle-left;
+}
+
+Button {
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+
+    width: 16px;
+    height: 16px;
+
+    justify-content: center;
+    align-items: center;
+
+    -unity-text-align: middle-center;
+    font-size: 20px;
+}
+
+Button:hover {
+    background-color: transparent;
+}
+
+Button:active {
+    background-color: transparent;
+}
