@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -35,6 +36,26 @@ namespace LordBreakerX.Stats
                     _eventRegistry.Add(profileEvent.statID, profileEvent._onChangedEvent);
                 }
             }
+
+            if (_currentProfile != null)
+            {
+                StatManager.UpdateStats(_currentProfile);
+            }
+        }
+
+        public void SetProfile(StatProfile profile)
+        {
+            if (profile != null)
+            {
+                _currentProfile = profile;
+                StatManager.UpdateStats(_currentProfile);
+            }
+        }
+
+        public void SetProfile(string profileID)
+        {
+            StatProfile profile = _holderStatProfiles.GetProfile(profileID);
+            SetProfile(profile);
         }
 
         public void OnStatUpdate(StatContext context)
