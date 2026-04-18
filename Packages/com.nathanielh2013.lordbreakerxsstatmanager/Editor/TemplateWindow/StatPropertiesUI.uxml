@@ -1,11 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-   <Style src="../Styles/StatPropertiesStyles.uss" />
-
-   <ui:Foldout text="Stat" class="decorated-foldout">
+    <ui:Foldout text="Stat" class="decorated-foldout">
         <ui:TextField label="Stat ID" name="stat-id" />
         <ui:EnumField label="Stat Type" name="stat-type" />
         <ui:FloatField label="Base Value" name="stat-base-value" />
-   </ui:Foldout>
+    </ui:Foldout>
 
     <ui:VisualElement style="min-height: 15;" />
 

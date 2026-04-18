@@ -12,7 +12,7 @@ namespace LordBreakerX.Stats
     [UxmlElement]
     public partial class StatProperties : VisualElement
     {
-        private const string UI_PATH = "Packages/com.nathanielh2013.lordbreakerxsstatmanager/Editor/Modular/UXML/StatPropertiesUI.uxml";
+        private const string UI_PATH = "Packages/com.nathanielh2013.lordbreakerxsstatmanager/Editor/TemplateWindow/StatPropertiesUI.uxml";
 
         private TextField _idField;
         private EnumField _statTypeField;

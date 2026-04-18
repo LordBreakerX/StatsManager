@@ -10,7 +10,7 @@ namespace LordBreakerX.Stats
     [UxmlElement]
     public partial class StatsElement : VisualElement
     {
-        private const string UI_PATH = "Packages/com.nathanielh2013.lordbreakerxsstatmanager/Editor/Modular/UXML/StatsUI.uxml";
+        private const string UI_PATH = "Packages/com.nathanielh2013.lordbreakerxsstatmanager/Editor/TemplateWindow/StatsUI.uxml";
 
         private ListView _statsView;
 
