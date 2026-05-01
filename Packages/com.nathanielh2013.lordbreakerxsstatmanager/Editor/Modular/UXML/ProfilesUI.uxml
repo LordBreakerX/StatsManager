@@ -12,7 +12,7 @@
         <!-- Stats Panel -->
         <ui:Instance template="EditorPanel" name="profilesPanel" style="min-width: 200; flex-grow: 1;">
             <ui:AttributeOverrides element-name="headerLabel" text="Stat Profiles" />
-            <ui:ListView name="stats-list" fixed-item-height="20" style="flex-grow: 1;" />
+            <ui:ListView name="profiles-list" fixed-item-height="20" style="flex-grow: 1;" />
         </ui:Instance>
 
         <!-- Properties Panel -->

@@ -1,6 +1,4 @@
-using System;
 using UnityEditor;
-using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
@@ -9,21 +7,13 @@ namespace LordBreakerX.Stats
         // the title of the editor window
         public const string WINDOW_TITLE = " Stats Editor";
 
-        // the path to the main stylesheet of the editor
-        public const string EDITOR_STYLE = "Packages/com.nathanielh2013.lordbreakerxsstatmanager/Editor/StyleSheets/StatEditor.uss";
-
         public const string EDITOR_SAVE_PATH = "LordBreakerX_StatsEditorWindow_Path";
 
         private StatProfilesAsset _asset;
 
-        public StatProfilesAsset Asset { get { return _asset; } }
+        private ProfilesElement _profiles;
 
-        public StatProfilePanel CurrentProfilePanel { get; private set; }
-        public StatsPanel CurrentStatsPanel { get; private set; }
-
-        public PropertiesPanel CurrentPropertiesPanel { get; private set; }
-
-        public StatsEditorToolbar CurrentToolbar { get; private set; }  
+        private StatsEditorToolbar _toolbar;
 
         public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
@@ -34,8 +24,6 @@ namespace LordBreakerX.Stats
 
             string path = AssetDatabase.GetAssetPath(window._asset);
             EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
-
-            window.UpdatePanels();
         }
 
         private void OnEnable()
@@ -45,6 +33,8 @@ namespace LordBreakerX.Stats
             {
                 _asset = AssetDatabase.LoadAssetAtPath<StatProfilesAsset>(path);
             }
+
+            if (_profiles != null) _profiles.ChangeAsset(_asset);
         }
 
         private void OnDisable()
@@ -55,7 +45,7 @@ namespace LordBreakerX.Stats
 
         private void Update()
         {
-            if (Asset == null)
+            if (_asset == null)
             {
                 Close();
             }
@@ -63,56 +53,13 @@ namespace LordBreakerX.Stats
 
         private void CreateGUI()
         {
-            VisualElement root = rootVisualElement;
+            _toolbar = new StatsEditorToolbar();
 
-            AddStyleSheets(root);
+            _profiles = new ProfilesElement();
+            _profiles.ChangeAsset(_asset);
 
-            CurrentToolbar = new StatsEditorToolbar();
-
-            CurrentProfilePanel = new StatProfilePanel(this);
-            CurrentStatsPanel = new StatsPanel(this);
-            CurrentPropertiesPanel = new PropertiesPanel(this);
-
-            VisualElement splitView = CreateSplitView(CurrentProfilePanel, CurrentStatsPanel, CurrentPropertiesPanel);
-
-            root.Add(CurrentToolbar);
-            root.Add(splitView);
-
-            UpdatePanels();
-        }
-
-        private void AddStyleSheets(VisualElement root)
-        {
-            StyleSheet editorStyles = AssetDatabase.LoadAssetAtPath<StyleSheet>(EDITOR_STYLE);
-            root.styleSheets.Add(editorStyles);
-        }
-
-        private VisualElement CreateSplitView(VisualElement stage, VisualElement stats, VisualElement properties)
-        {
-            var mainSplit = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
-            var secondSplit = new TwoPaneSplitView(1, 300, TwoPaneSplitViewOrientation.Horizontal);
-
-            secondSplit.Add(stats);
-            secondSplit.Add(properties);
-
-            mainSplit.Add(stage);
-            mainSplit.Add(secondSplit);
-
-            mainSplit.style.flexGrow = 1;
-
-            return mainSplit;
-        }
-
-        public void UpdatePanels()
-        {
-            if (CurrentProfilePanel != null)
-                CurrentProfilePanel.UpdatePanel();
-
-            if (CurrentStatsPanel != null)
-                CurrentStatsPanel.UpdatePanel();
-
-            if (CurrentPropertiesPanel != null)
-                CurrentPropertiesPanel.UpdatePanel();
+            rootVisualElement.Add(_toolbar);
+            rootVisualElement.Add(_profiles);
         }
     }
 }

@@ -64,6 +64,12 @@ namespace LordBreakerX.Stats
                 _statProperties.SetStat(_currentStat, statProperty);
                 _onChanged.Invoke();
             }
+            else
+            {
+                _currentStat = null;
+                _statProperties.SetStat(null, null);
+                _onChanged.Invoke();
+            }
         }
 
         private void CreateStat()
@@ -109,13 +115,15 @@ namespace LordBreakerX.Stats
 
                 _addButton.SetEnabled(true);
 
-                //if (_stats.Count > 0)
-                //    _statProperties.SetStat(_stats[0], null);
+                _statsView.SetSelection(-1);
+
+                if (itemSources.Count > 0) 
+                    _statsView.SetSelection(0);
             }
             else
             {
                 _addButton.SetEnabled(false);
-                //_statProperties.SetStat(null, null);
+                _statsView.SetSelection(-1);
             }
         }
     }

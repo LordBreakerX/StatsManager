@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72bd9c8c8a02bf3428d8cd84108f54cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Nathanielh2013.Lordbreakerxsstatmanager::LordBreakerX.Stats.StatHolder
-  _holderStatProfiles: {fileID: 11400000, guid: 06c8219ca217c13409c25ee6d735f778, type: 2}
+  _holderStatProfiles: {fileID: 0}
   _currentProfile: {fileID: 0}
   _statsEvents: []
 --- !u!4 &164204591

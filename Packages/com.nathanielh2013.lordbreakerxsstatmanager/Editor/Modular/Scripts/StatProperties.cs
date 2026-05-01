@@ -259,6 +259,13 @@ namespace LordBreakerX.Stats
             }
             else
             {
+                _idField.value = "";
+                _floatValueField.value = 0;
+                _statTypeField.value = StatType.Float;
+                _modifiersView.itemsSource = new List<StatModifier>();
+
+                _modifiersView.Rebuild();
+
                 SetEnabled(false);
             }
         }
