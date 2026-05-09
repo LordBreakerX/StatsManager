@@ -1,11 +1,25 @@
 # Changelog
-All notable changes to this package will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+## [0.1.2] - 2026-05-09
 
-## [0.1.0] - 2026-03-31
+### Added
 
-### This is the first release of *\<LordBreakerX's Stat Manager\>*.
+- package link to wiki documentation on github.
+- package link to this changelog on github.
+- the start of the documentation of the Stat Manager.
 
-*Short description of this release*
+### Fixed
+
+- Null exception error that breaks stat editor when first opening the editor during a session (#1)
+- Editor not showing created profiles after fixing issue 1 (#2).
+- Created stats having a blank name instead of its default: "Stat {Stat Index}" (#3).
+- Created stat not automatically being renamed when first created (#4).
+- Stat profile not being focused and text selected when first created (#5). 
+
+### Changed
+
+- Changed package description to something that describes the package and its features.
+
+### Removed
+
+- Unused documentation files

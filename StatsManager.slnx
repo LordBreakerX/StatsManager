@@ -1,4 +1,5 @@
 ﻿<Solution>
   <Project Path="Nathanielh2013.Lordbreakerxsstatmanager.csproj" />
   <Project Path="Nathanielh2013.Lordbreakerxsstatmanager.Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
 </Solution>

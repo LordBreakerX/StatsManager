@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 164204591}
-  - component: {fileID: 164204590}
+  - component: {fileID: 164204592}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -136,21 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &164204590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 164204589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72bd9c8c8a02bf3428d8cd84108f54cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Nathanielh2013.Lordbreakerxsstatmanager::LordBreakerX.Stats.StatHolder
-  _holderStatProfiles: {fileID: 11400000, guid: 06c8219ca217c13409c25ee6d735f778, type: 2}
-  _currentProfile: {fileID: 0}
-  _statsEvents: []
 --- !u!4 &164204591
 Transform:
   m_ObjectHideFlags: 0
@@ -166,6 +151,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &164204592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164204589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873e725133d551347943980441a6da2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  _profile: {fileID: -5618865566204598943, guid: 323cbeb27bee75e49bed3f3f347a60cd, type: 2}
+  _maxHealth: 100
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

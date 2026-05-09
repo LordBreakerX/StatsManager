@@ -23,20 +23,26 @@ namespace LordBreakerX.Stats
         #endregion
 
         #region Singleton Creation
-        private static StatManager Singleton
+        private static StatManager GetSingleton()
         {
-            get
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    GameObject instanceObject = new GameObject();
-                    instanceObject.name = INSTANCE_NAME;
-                    _instance = instanceObject.AddComponent<StatManager>();
-                    GameObject.DontDestroyOnLoad(instanceObject);
-                }
+                GameObject instanceObject = new GameObject();
+                instanceObject.name = INSTANCE_NAME;
+                _instance = instanceObject.AddComponent<StatManager>();
+                GameObject.DontDestroyOnLoad(instanceObject);
 
-                return _instance;
+                _instance._statHandlers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                    .OfType<IStatHandler>()
+                    .ToList();
+
+                foreach (IStatHandler handler in _instance._statHandlers)
+                {
+                    RegisterListener(handler.OnStatUpdate);
+                }
             }
+
+            return _instance;
         }
         #endregion
 
@@ -93,12 +99,12 @@ namespace LordBreakerX.Stats
         #region Register Events
         public static void RegisterListener(UnityAction<StatContext> statUpdateCallback)
         {
-            Singleton._onStatUpdate.AddListener(statUpdateCallback);
+            GetSingleton()._onStatUpdate.AddListener(statUpdateCallback);
         }
 
         public static void UnregisterListener(UnityAction<StatContext> statUpdateCallback)
         {
-            Singleton._onStatUpdate.RemoveListener(statUpdateCallback);
+            GetSingleton()._onStatUpdate.RemoveListener(statUpdateCallback);
         }
         #endregion
 
@@ -108,7 +114,7 @@ namespace LordBreakerX.Stats
             foreach (Stat stat in profile.Stats)
             {
                 StatContext context = new StatContext(profile, stat);
-                Singleton._onStatUpdate?.Invoke(context);
+                GetSingleton()._onStatUpdate?.Invoke(context);
             }
         }
 
