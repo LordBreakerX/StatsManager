@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -27,30 +26,47 @@ namespace LordBreakerX.Stats
 
         public static void OpenWindow(string namePrefix, StatProfilesAsset assetToEdit)
         {
-            System.Type sceneViewType = typeof(SceneView);
-            StatsEditorWindow window = GetWindow<StatsEditorWindow>(sceneViewType);
-            window.titleContent = new UnityEngine.GUIContent(namePrefix + WINDOW_TITLE);
-            window._asset = assetToEdit;
-
-            string path = AssetDatabase.GetAssetPath(window._asset);
-            EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
-
-            window.UpdatePanels();
+            if (assetToEdit != null)
+            {
+                System.Type sceneViewType = typeof(SceneView);
+                StatsEditorWindow window = GetWindow<StatsEditorWindow>(sceneViewType);
+                window.titleContent = new UnityEngine.GUIContent(namePrefix + WINDOW_TITLE);
+                window._asset = assetToEdit;
+                window.UpdatePanels();
+            }
         }
 
         private void OnEnable()
         {
-            string path = EditorPrefs.GetString(EDITOR_SAVE_PATH, null);
-            if (!string.IsNullOrEmpty(path))
-            {
-                _asset = AssetDatabase.LoadAssetAtPath<StatProfilesAsset>(path);
-            }
+            LoadEditor();
         }
 
         private void OnDisable()
         {
-            string path = AssetDatabase.GetAssetPath(_asset);
-            EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
+            SaveEditor();
+        }
+
+        private void LoadEditor()
+        {
+            if (_asset == null)
+            {
+                string path = EditorPrefs.GetString(EDITOR_SAVE_PATH, null);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    _asset = AssetDatabase.LoadAssetAtPath<StatProfilesAsset>(path);
+                }
+            }
+
+            UpdatePanels();
+        }
+
+        private void SaveEditor()
+        {
+            if (_asset != null)
+            {
+                string path = AssetDatabase.GetAssetPath(_asset);
+                EditorPrefs.SetString(EDITOR_SAVE_PATH, path);
+            }
         }
 
         private void Update()
@@ -105,6 +121,8 @@ namespace LordBreakerX.Stats
 
         public void UpdatePanels()
         {
+            if (_asset == null) return;
+
             if (CurrentProfilePanel != null)
                 CurrentProfilePanel.UpdatePanel();
 

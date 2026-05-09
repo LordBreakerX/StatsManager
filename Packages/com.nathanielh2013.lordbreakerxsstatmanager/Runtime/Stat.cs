@@ -58,15 +58,9 @@ namespace LordBreakerX.Stats
             return value;
         }
 
-        public bool SetId(string id)
+        public void SetId(string id)
         {
-            if (!string.IsNullOrEmpty(id))
-            {
-                _id = id;
-                return true;
-            }
-
-            return false;
+            _id = id;
         }
 
         public string GetId()

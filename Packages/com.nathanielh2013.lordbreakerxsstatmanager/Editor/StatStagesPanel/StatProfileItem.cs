@@ -26,6 +26,12 @@ namespace LordBreakerX.Stats
                 AssetDatabase.Refresh();
 
                 NameTextField.style.display = DisplayStyle.Flex;
+
+                ParentView.schedule.Execute(() =>
+                {
+                    NameTextField.Focus();
+                    NameTextField.SelectAll();
+                });
             }
             else
             {
@@ -77,7 +83,12 @@ namespace LordBreakerX.Stats
         {
             NameTextField.style.display = DisplayStyle.Flex;
             NameLabel.style.display = DisplayStyle.None;
-            NameTextField.Focus();
+
+            ParentView.schedule.Execute(() =>
+            {
+                NameTextField.Focus();
+                NameTextField.SelectAll();
+            });
         }
 
         public override void RegisterEvents()

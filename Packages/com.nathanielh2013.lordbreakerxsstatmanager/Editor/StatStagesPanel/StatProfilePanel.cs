@@ -37,7 +37,8 @@ namespace LordBreakerX.Stats
 
         protected override List<StatProfile> GetItemsSource()
         {
-            return ParentWindow.Asset.Profiles;
+            if (ParentWindow.Asset == null) return new List<StatProfile>();
+            else return ParentWindow.Asset.Profiles;
         }
 
         protected override void CreateElement()
@@ -53,6 +54,7 @@ namespace LordBreakerX.Stats
             }
 
             ParentWindow.Asset.Profiles.Add(profile);
+
             CurrentListView.Rebuild();
 
             if (ParentWindow.CurrentToolbar.CurrentTemplate != null)

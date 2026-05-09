@@ -61,7 +61,8 @@ namespace LordBreakerX.Stats
                 stat.SetId("");
 
                 selectedProfile.Stats.Add(stat);
-                CurrentListView.RefreshItems();
+
+                CurrentListView.Rebuild();
 
                 EditorUtility.SetDirty(ParentWindow.Asset);
                 EditorUtility.SetDirty(selectedProfile);
