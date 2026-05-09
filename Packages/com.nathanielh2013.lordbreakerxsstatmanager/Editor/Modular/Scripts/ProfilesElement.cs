@@ -6,6 +6,24 @@ using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
 {
+    public class ProfileItem : ListItem<StatProfile>
+    {
+        protected override void DeleteItem(DropdownMenuAction action)
+        {
+            
+        }
+
+        protected override void DuplicateItem(DropdownMenuAction action)
+        {
+            
+        }
+
+        protected override void RenameItem(DropdownMenuAction action)
+        {
+            
+        }
+    }
+
     [UxmlElement]
     public partial class ProfilesElement : VisualElement
     {
@@ -98,21 +116,16 @@ namespace LordBreakerX.Stats
 
         private VisualElement MakeProfilesItem()
         {
-            Label label = new Label();
-            label.style.unityTextAlign = TextAnchor.MiddleLeft;
-            label.style.paddingLeft = 10;
-            return label;
+            return new ProfileItem();
         }
 
         private void BindProfilesItem(VisualElement element, int index)
         {
             StatProfile statProfile = (StatProfile)_profilesList.itemsSource[index];
 
-            element.userData = index;
-
-            if (element is Label label)
+            if (element is ProfileItem item)
             {
-                label.text = statProfile.ID;
+                item.SetData(statProfile, statProfile.ID);
             }
         }
     }

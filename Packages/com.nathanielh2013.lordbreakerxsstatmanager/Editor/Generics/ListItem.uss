@@ -1,0 +1,13 @@
+VisualElement 
+{
+	justify-content: center;
+}
+
+Label {
+	padding-left: 5;
+	padding-right: 5;
+}
+
+TextField {
+
+}
