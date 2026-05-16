@@ -9,30 +9,29 @@ namespace LordBreakerX.Stats
         [SerializeField]
         private List<Stat> _stats = new List<Stat>();
 
-        private Dictionary<string, Stat> _statRegsitry = new Dictionary<string, Stat>();
-
         public string ID { get { return name; } }
 
         public List<Stat> Stats { get { return _stats; } }
 
-        private void OnEnable()
+        public Dictionary<string, Stat> GetStatsTable()
         {
-            //_statRegsitry.Clear();
+            Dictionary<string, Stat> statTable = new Dictionary<string, Stat>();
 
-            //foreach (Stat stat in _stats) 
-            //{
-            //    _statRegsitry[stat.Id] = stat;
-            //}
-        }
-
-        public Stat GetStat(string id)
-        {
-            if (_statRegsitry.ContainsKey(id))
+            foreach (Stat stat in Stats) 
             {
-                return _statRegsitry[id];
+                if (!statTable.ContainsKey(stat.GetId()))
+                {
+                    statTable.Add(stat.GetId(), stat);
+                }
+#if UNITY_EDITOR
+                else
+                {
+                    Debug.LogWarning($"\"{ID}\" Stat Profile already has the stat \"{stat.GetId()}\"!");
+                }
+#endif
             }
 
-            return null;
+            return statTable;
         }
     }
 }

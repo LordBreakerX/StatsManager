@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 164204591}
   - component: {fileID: 164204592}
+  - component: {fileID: 164204593}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -163,8 +164,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873e725133d551347943980441a6da2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  _profile: {fileID: -5618865566204598943, guid: 323cbeb27bee75e49bed3f3f347a60cd, type: 2}
-  _maxHealth: 100
+  _holder: {fileID: 164204593}
+  _maxHealth: 0
+--- !u!114 &164204593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164204589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1714bc353024bf4dba8b30d776bbc56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nathanielh2013.Lordbreakerxsstatmanager::LordBreakerX.Stats.StatHolder
+  _holderStatProfiles: {fileID: 11400000, guid: c6d6b61ea87c2554dbc33fe3465fbb9a, type: 2}
+  _startingProfile: {fileID: -924091005084618238, guid: c6d6b61ea87c2554dbc33fe3465fbb9a, type: 2}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

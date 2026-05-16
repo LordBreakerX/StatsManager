@@ -1,26 +1,15 @@
 using LordBreakerX.Stats;
 using UnityEngine;
 
-public class Health : MonoBehaviour, IStatHandler
+public class Health : MonoBehaviour
 {
     [SerializeField]
-    private StatProfile _profile;
+    private StatHolder _holder;
 
     public float _maxHealth;
 
-    [ContextMenu("Update Stats")]
-    public void UpdateStats()
+    private void Start()
     {
-        StatManager.UpdateStats(_profile);
-    }
-
-    public void OnStatUpdate(StatContext context)
-    {
-        Debug.Log("Stat Update");
-
-        if (context.IsStat("Health"))
-        {
-            _maxHealth = context.GetValue();
-        }
+        _maxHealth = _holder.GetFloat("Health");
     }
 }

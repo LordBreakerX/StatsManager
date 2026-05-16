@@ -15,7 +15,7 @@ MonoBehaviour:
   _stats:
   - _id: Health
     _type: 1
-    _baseValue: 0
+    _baseValue: 200
     _modifiers:
     - rid: 8477348265764847802
   references:
@@ -24,8 +24,8 @@ MonoBehaviour:
     - rid: 8477348265764847802
       type: {class: RandomFloatModifier, ns: LordBreakerX.Stats, asm: Nathanielh2013.Lordbreakerxsstatmanager}
       data:
-        _min: 0
-        _max: 0
+        _min: -50
+        _max: 50
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

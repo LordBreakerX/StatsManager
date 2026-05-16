@@ -1,76 +1,48 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace LordBreakerX.Stats
 {
-    public class StatHolder : MonoBehaviour, IStatHandler
+    public class StatHolder : MonoBehaviour
     {
-        [Serializable]
-        public struct StatProfileEvent
-        {
-            public string statID;
-            public UnityEvent<StatContext> _onChangedEvent;
-        }
-
         [SerializeField]
         private StatProfilesAsset _holderStatProfiles;
 
         [SerializeField]
-        private StatProfile _currentProfile;
+        private StatProfile _startingProfile;
 
-        [SerializeField]
-        private List<StatProfileEvent> _statsEvents = new();
+        private Dictionary<string, Stat> _stats = new Dictionary<string, Stat>();
 
-        private Dictionary<string, UnityEvent<StatContext>> _eventRegistry = new Dictionary<string, UnityEvent<StatContext>>();
+        public StatProfile StartingProfile { get => _startingProfile; set => _startingProfile = value;  }
 
-        public List<StatProfileEvent> StatsEvents { get => _statsEvents; set => _statsEvents = value; }
         private void Awake()
         {
-            foreach (StatProfileEvent profileEvent in _statsEvents) 
-            {
-                if (!_eventRegistry.ContainsKey(profileEvent.statID))
-                {
-                    _eventRegistry.Add(profileEvent.statID, profileEvent._onChangedEvent);
-                }
-            }
-
-            if (_currentProfile != null)
-            {
-                StatManager.UpdateStats(_currentProfile);
-            }
+            SetProfile(_startingProfile);
         }
 
         public void SetProfile(StatProfile profile)
         {
-            if (profile != null)
+            _stats = profile.GetStatsTable();
+        }
+
+        public float GetFloat(string statID)
+        {
+            if (_stats.ContainsKey(statID))
             {
-                _currentProfile = profile;
-                StatManager.UpdateStats(_currentProfile);
+                return _stats[statID].GetValue();
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning($"The stat \"{statID}\" does not exist!");
+#endif
+                return 0;
             }
         }
 
-        public void SetProfile(string profileID)
+        public int GetInt(string statID)
         {
-            StatProfile profile = _holderStatProfiles.GetProfile(profileID);
-            SetProfile(profile);
-        }
-
-        public void OnStatUpdate(StatContext context)
-        {
-            if (context.statProfile != _currentProfile) return;
-
-            string statID = context.stat.GetId();
-
-            if (_eventRegistry.ContainsKey(statID))
-            {
-                var statEvent = _eventRegistry[statID];
-
-                if (statEvent != null)
-                    statEvent.Invoke(context);
-            }
+            return (int)GetFloat(statID);
         }
     }
 }

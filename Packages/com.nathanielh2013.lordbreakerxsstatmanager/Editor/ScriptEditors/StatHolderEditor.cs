@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -11,8 +12,6 @@ namespace LordBreakerX.Stats
     {
         private PopupField<StatProfile> _currentProfilePopup;
 
-        private ListView _eventsList;
-
         public override VisualElement CreateInspectorGUI()
         {
             StatHolder holder = (StatHolder)target;
@@ -21,10 +20,9 @@ namespace LordBreakerX.Stats
 
             SerializedProperty profilesProperty = serializedObject.FindProperty("_holderStatProfiles");
             PropertyField profilesField = new PropertyField(profilesProperty, "Profiles");
-            profilesField.RegisterValueChangeCallback(OnProfileAssetChanged);
-            root.Add(profilesField);
 
             _currentProfilePopup = new PopupField<StatProfile>("Starting Profile");
+
             _currentProfilePopup.formatListItemCallback = (statProfile) =>
             {
                 if (statProfile != null) return statProfile.ID;
@@ -35,44 +33,23 @@ namespace LordBreakerX.Stats
                 if (statProfile != null) return statProfile.ID;
                 else return "No Profiles";
             };
+
+            profilesField.RegisterValueChangeCallback(OnProfileAssetChanged);
             _currentProfilePopup.RegisterValueChangedCallback(OnProfileChanged);
+
+            root.Add(profilesField);
             root.Add(_currentProfilePopup);
 
-            VisualElement spacer = new VisualElement();
-            spacer.style.flexGrow = 15;
-            root.Add(spacer);
-
-            _eventsList = new ListView();
-            _eventsList.style.flexGrow = 1;
-            _eventsList.itemsSource = holder.StatsEvents;
-            _eventsList.makeNoneElement = () => { return new VisualElement(); };
-            _eventsList.makeItem = () => { return new VisualElement(); };
-            _eventsList.bindItem = OnCreateEventItem;
-            _eventsList.reorderable = false;
-            _eventsList.selectionType = SelectionType.None;
-            _eventsList.virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight;
-            _eventsList.Rebuild();
-
-            root.Add(_eventsList);
-
             return root;
-        }
-
-        private void OnCreateEventItem(VisualElement element, int index)
-        {
-            throw new NotImplementedException();
         }
 
         private void OnProfileChanged(ChangeEvent<StatProfile> evt)
         {
             StatHolder holder = (StatHolder)target;
 
-            holder.StatsEvents = new List<StatHolder.StatProfileEvent>();
+            holder.StartingProfile = evt.newValue;
 
-            if (evt.newValue != null)
-            {
-                
-            }
+            Debug.Log(holder.StartingProfile);
 
             EditorUtility.SetDirty(target);
         }
