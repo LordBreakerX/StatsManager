@@ -49,8 +49,6 @@ namespace LordBreakerX.Stats
 
             holder.StartingProfile = evt.newValue;
 
-            Debug.Log(holder.StartingProfile);
-
             EditorUtility.SetDirty(target);
         }
 
