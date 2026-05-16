@@ -2,7 +2,8 @@
     "name": "Nathanielh2013.Lordbreakerxsstatmanager.Editor",
     "rootNamespace": "LordBreakerX.Stats",
     "references": [
-        "Nathanielh2013.Lordbreakerxsstatmanager"
+        "Nathanielh2013.Lordbreakerxsstatmanager",
+        "LordBreakerX.EditorUtilities"
     ],
     "includePlatforms": [
         "Editor"

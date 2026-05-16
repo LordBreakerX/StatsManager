@@ -1,15 +1,16 @@
 {
-	"name": "com.nathanielh2013.lordbreakerxsstatmanager",
-	"displayName":"LordBreakerX's Stat Manager",
-	"version": "0.1.2",
-	"unity": "6000.3",
-	"unityRelease": "7f1",
-	"description": "Flexible and extensible stat system for Unity featuring customizable stat profiles, reusable templates, and dynamic modifier support. Create profiles containing any number of float or integer stats with configurable base values and stat-specific modifier behavior. Templates allow rapid profile creation by automatically adding predefined stat sets. Ideal for difficulty settings, level balancing, progression systems, enemy variants, and other stat-driven gameplay mechanics. \n\n<b>Features</b>\n\u25AA Custom editor tools for creating and managing stat profiles\n\u25AA Support for both float and integer stats\n\u25AA Configurable base values and stat modifiers\n\u25AA Stat-specific modifier behavior and progression logic\n\u25AA Reusable stat templates for faster setup\n\u25AA Automatic template stat population when creating profiles\n\u25AA Multiple profiles for handling different gameplay variations\n\u25AA Suitable for difficulty systems, levels, enemies, and progression systems\n\u25AA Designed for scalability, flexibility, and easy integration into existing Unity projects",
-	"dependencies": {
-	},
-	"author": {
-		"name": "Nathaniel Hachey"
-	},
-	"changelogUrl": "https://github.com/LordBreakerX/StatsManager/blob/main/Packages/com.nathanielh2013.lordbreakerxsstatmanager/CHANGELOG.md",
-	"documentationUrl": "https://github.com/LordBreakerX/StatsManager/wiki"
+  "name": "com.nathanielh2013.lordbreakerxsstatmanager",
+  "displayName": "LordBreakerX's Stat Manager",
+  "version": "0.1.2",
+  "unity": "6000.3",
+  "unityRelease": "7f1",
+  "description": "Flexible and extensible stat system for Unity featuring customizable stat profiles, reusable templates, and dynamic modifier support. Create profiles containing any number of float or integer stats with configurable base values and stat-specific modifier behavior. Templates allow rapid profile creation by automatically adding predefined stat sets. Ideal for difficulty settings, level balancing, progression systems, enemy variants, and other stat-driven gameplay mechanics. \n\n<b>Features</b>\n\u25aa Custom editor tools for creating and managing stat profiles\n\u25aa Support for both float and integer stats\n\u25aa Configurable base values and stat modifiers\n\u25aa Stat-specific modifier behavior and progression logic\n\u25aa Reusable stat templates for faster setup\n\u25aa Automatic template stat population when creating profiles\n\u25aa Multiple profiles for handling different gameplay variations\n\u25aa Suitable for difficulty systems, levels, enemies, and progression systems\n\u25aa Designed for scalability, flexibility, and easy integration into existing Unity projects",
+  "dependencies": {
+    "com.lordbreakerx.editorutilities": "0.1.0"
+  },
+  "author": {
+    "name": "Nathaniel Hachey"
+  },
+  "changelogUrl": "https://github.com/LordBreakerX/StatsManager/blob/main/Packages/com.nathanielh2013.lordbreakerxsstatmanager/CHANGELOG.md",
+  "documentationUrl": "https://github.com/LordBreakerX/StatsManager/wiki"
 }

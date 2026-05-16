@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LordBreakerX.Stats
@@ -169,32 +168,17 @@ namespace LordBreakerX.Stats
 
             if (stat == null || profile == null) return;
 
-            GenericMenu menu = new GenericMenu();
-
-            List<ModifierAttributeResult> modifiers = ModifierAttributeFinder.GetTypesWithAttribute();
-
-            foreach (ModifierAttributeResult result in modifiers)
+            UnityEditor.PopupWindow.Show(_statModifierButton.worldBound, new StatModifierBuilder(stat, (info) =>
             {
-                if (result.attribute.ModifierType == stat.ValueType)
+                StatModifier modifier = (StatModifier)Activator.CreateInstance(info.Value);
+
+                if (modifier != null)
                 {
-                    var capturedType = result.modifierType;
-                    var capturedName = result.attribute.DisplayName;
-
-                    menu.AddItem(new GUIContent(capturedName), false, () =>
-                    {
-                        var modifier = (StatModifier)Activator.CreateInstance(capturedType);
-
-                        if (modifier != null)
-                        {
-                            stat.AddModifier(modifier);
-                            EditorUtility.SetDirty(profile);
-                            UpdateModifiers();
-                        }
-                    });
+                    stat.AddModifier(modifier);
+                    EditorUtility.SetDirty(profile);
+                    UpdateModifiers();
                 }
-            }
-
-            menu.ShowAsContext();
+            }));
         }
 
         public void UpdateModifiers()

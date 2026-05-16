@@ -1,10 +1,19 @@
 {
   "dependencies": {
+    "com.lordbreakerx.editorutilities": {
+      "version": "https://github.com/LordBreakerX/UnityEditorUtilities.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "080960c61b1b3ede99be84c0b6d0b0118bd6bfbe"
+    },
     "com.nathanielh2013.lordbreakerxsstatmanager": {
       "version": "file:com.nathanielh2013.lordbreakerxsstatmanager",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.lordbreakerx.editorutilities": "0.1.0"
+      }
     },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
