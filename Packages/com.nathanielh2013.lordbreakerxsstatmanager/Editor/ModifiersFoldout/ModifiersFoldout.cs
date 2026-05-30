@@ -168,13 +168,11 @@ namespace LordBreakerX.Stats
 
             if (stat == null || profile == null) return;
 
-            UnityEditor.PopupWindow.Show(_statModifierButton.worldBound, new StatModifierBuilder(stat, (info) =>
+            UnityEditor.PopupWindow.Show(_statModifierButton.worldBound, new ModifierBuilderMenu(stat.ValueType, (builder) =>
             {
-                StatModifier modifier = (StatModifier)Activator.CreateInstance(info.Value);
-
-                if (modifier != null)
+                if (builder != null && builder.Value != null)
                 {
-                    stat.AddModifier(modifier);
+                    stat.AddModifier(builder.Value);
                     EditorUtility.SetDirty(profile);
                     UpdateModifiers();
                 }

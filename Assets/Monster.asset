@@ -40,3 +40,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Nathanielh2013.Lordbreakerxsstatmanager::LordBreakerX.Stats.StatProfilesAsset
   _profiles:
   - {fileID: -924091005084618238}
+  - {fileID: 1132280464362460043}
+--- !u!114 &1132280464362460043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c298e877783684989ca83edab40830, type: 3}
+  m_Name: Hard
+  m_EditorClassIdentifier: Nathanielh2013.Lordbreakerxsstatmanager::LordBreakerX.Stats.StatProfile
+  _stats: []
+  references:
+    version: 2
+    RefIds: []

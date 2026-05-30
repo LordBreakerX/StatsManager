@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "080960c61b1b3ede99be84c0b6d0b0118bd6bfbe"
+      "hash": "15c6ef9adcd95c3c26fd1058dff6f3597a77f1dc"
     },
     "com.nathanielh2013.lordbreakerxsstatmanager": {
       "version": "file:com.nathanielh2013.lordbreakerxsstatmanager",

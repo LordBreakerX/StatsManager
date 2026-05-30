@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LordBreakerX.Stats
 {
     [System.Serializable]
-    [CustomStatModifier("Random Number", StatType.Float)]
+    [CustomStatModifier("Example Modifiers", "Random Number", StatType.Float)]
     public class RandomFloatModifier : StatModifier
     {
         // example modifier for testing
